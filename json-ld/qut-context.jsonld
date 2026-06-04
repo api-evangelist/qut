@@ -1,0 +1,53 @@
+{
+  "@context": {
+    "schema": "https://schema.org/",
+    "qut": "https://www.qut.edu.au/#vocab/",
+    "name": "schema:name",
+    "url": "schema:url",
+    "description": "schema:description",
+    "logo": "schema:logo",
+    "sameAs": "schema:sameAs",
+    "email": "schema:email",
+    "address": "schema:address",
+    "department": "schema:department",
+    "Organization": "schema:CollegeOrUniversity",
+    "Repository": "schema:DataCatalog",
+    "Dataset": "schema:Dataset",
+    "identifier": "schema:identifier",
+    "datePublished": "schema:datePublished",
+    "creator": "schema:creator",
+    "publisher": "schema:publisher",
+    "license": "schema:license",
+    "isPartOf": "schema:isPartOf",
+    "metadataFormat": "qut:metadataFormat",
+    "oaiBaseURL": {
+      "@id": "qut:oaiBaseURL",
+      "@type": "@id"
+    },
+    "protocolVersion": "qut:protocolVersion"
+  },
+  "@type": "Organization",
+  "name": "Queensland University of Technology",
+  "url": "https://www.qut.edu.au/",
+  "description": "Public research university based in Brisbane, Australia, serving around 50,000 students with an applied emphasis in teaching and research.",
+  "logo": "https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg",
+  "email": "eprints@qut.edu.au",
+  "sameAs": [
+    "https://github.com/eresearchqut",
+    "https://au.linkedin.com/school/queensland-university-of-technology/"
+  ],
+  "department": {
+    "@type": "Repository",
+    "name": "QUT ePrints",
+    "url": "https://eprints.qut.edu.au/",
+    "description": "Open institutional repository of QUT research outputs, harvestable via OAI-PMH 2.0.",
+    "oaiBaseURL": "https://eprints.qut.edu.au/cgi/oai2",
+    "protocolVersion": "2.0",
+    "metadataFormat": [
+      "oai_dc",
+      "oai_bibl",
+      "oai_openaire",
+      "uketd_dc"
+    ]
+  }
+}
