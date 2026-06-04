@@ -1,0 +1,46 @@
+---
+name: Queensland University of Technology
+description: Queensland University of Technology public developer/API footprint review for APIs.json cataloging.
+url: https://raw.githubusercontent.com/api-evangelist/qut/refs/heads/main/review.yml
+created: '2026-06-03'
+modified: '2026-06-03'
+reviews:
+  - date: '2026-06-03'
+    rating: 2
+    summary: >-
+      QUT has a limited but genuine public developer footprint. The one clearly
+      public, documented, no-auth machine interface confirmed live is the QUT
+      ePrints OAI-PMH 2.0 endpoint (verb=Identify returns "QUT ePrints",
+      protocol 2.0, admin eprints@qut.edu.au; ListMetadataFormats returns
+      oai_dc, oai_bibl, oai_openaire, uketd_dc). Active research GitHub orgs
+      exist (eResearch ~86 repos, plus qcr, qutas, QUTlib, QUT-Digital-Observatory).
+      Library Search runs on Ex Libris Primo VE / Alma, which technically have
+      vendor APIs, but QUT publishes no open developer docs or keys for them.
+      The Timetable Planner, mobile app backend, and SSO/identity layer are
+      gated and undocumented. No public open-data portal (e.g. data.qut.edu.au)
+      was found. No endpoints fabricated; ratings reflect low public API maturity.
+    endpoints:
+      - url: https://eprints.qut.edu.au/cgi/oai2?verb=Identify
+        status: 200
+        note: Live OAI-PMH 2.0 Identify response, repository "QUT ePrints".
+      - url: https://eprints.qut.edu.au/cgi/oai2?verb=ListMetadataFormats
+        status: 200
+        note: Returns oai_dc, oai_bibl, oai_openaire, uketd_dc.
+      - url: https://eprints.qut.edu.au/
+        status: 200
+        note: QUT ePrints repository front end (GNU EPrints).
+      - url: https://www.library.qut.edu.au/about/collections/qut-eprints/
+        status: 200
+        note: Library page documenting ePrints and the OAI harvest URL.
+      - url: https://researchdatafinder.qut.edu.au/about
+        status: 200
+        note: Research Data Finder; harvested by ARDC but no documented public API.
+      - url: https://github.com/eresearchqut
+        status: 200
+        note: Active QUT eResearch GitHub org, ~86 repositories.
+      - url: https://www.qut.edu.au/
+        status: 200
+        note: Official institutional website.
+      - url: https://au.linkedin.com/school/queensland-university-of-technology/
+        status: 200
+        note: Official QUT school LinkedIn page.
