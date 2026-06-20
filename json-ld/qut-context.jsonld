@@ -30,7 +30,7 @@
   "name": "Queensland University of Technology",
   "url": "https://www.qut.edu.au/",
   "description": "Public research university based in Brisbane, Australia, serving around 50,000 students with an applied emphasis in teaching and research.",
-  "logo": "https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg",
+  "logo": "https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg",
   "email": "eprints@qut.edu.au",
   "sameAs": [
     "https://github.com/eresearchqut",
