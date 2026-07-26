@@ -1,4 +1,3 @@
----
 aid: qut
 name: Queensland University of Technology
 description: >-
@@ -14,9 +13,21 @@ description: >-
   Timetable Planner, the QUT mobile app backend, and the SSO identity layer) are
   internal or gated and do not publish open developer documentation.
 type: Index
+accessModel:
+  pricing: free
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Free
+  confidence: medium
+  source:
+    - plans
+  generated: '2026-07-22'
+  method: derived
 position: Consumer
 access: 3rd-Party
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/qut.png
 url: https://raw.githubusercontent.com/api-evangelist/qut/refs/heads/main/apis.yml
 tags:
   - Education
@@ -27,26 +38,9 @@ tags:
   - Australia
   - OAI-PMH
 created: '2026-06-03'
-modified: '2026-06-03'
+modified: '2026-07-25'
 specificationVersion: '0.19'
-apis:
-  - aid: qut:eprints-oai
-    name: QUT ePrints OAI-PMH
-    description: >-
-      OAI-PMH 2.0 metadata harvesting interface for the QUT ePrints institutional
-      repository, an open collection of research outputs (journal articles,
-      conference papers, theses) produced by QUT staff and postgraduate students.
-      Metadata is freely harvestable without authentication and supports the
-      oai_dc, oai_bibl, oai_openaire, and uketd_dc metadata formats. The
-      repository runs on GNU EPrints software.
-    humanURL: https://www.library.qut.edu.au/about/collections/qut-eprints/
-    baseURL: https://eprints.qut.edu.au/cgi/oai2
-    tags: [ Research, Repository, OAI-PMH, Open Access, Metadata, EPrints ]
-    properties:
-      - type: Documentation
-        url: https://www.library.qut.edu.au/about/collections/qut-eprints/
-      - type: Repository
-        url: https://eprints.qut.edu.au/
+apis: []
 common:
   - type: DomainSecurity
     url: security/qut-domain-security.yml
@@ -64,6 +58,8 @@ common:
     url: finops/qut-finops.yml
   - type: Review
     url: review.yml
+  - type: About
+    url: https://www.library.qut.edu.au/about/collections/qut-eprints/
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
