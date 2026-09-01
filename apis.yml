@@ -1,66 +1,343 @@
 aid: qut
 name: Queensland University of Technology
+x-type: university
+x-category: Public Research University
 description: >-
-  Queensland University of Technology (QUT) is a public research university
-  based in Brisbane, Australia, ranked #213 in the QS World University Rankings
-  2025. QUT serves around 50,000 students with an applied emphasis in teaching
-  and research. Its public, machine-accessible developer footprint is modest and
-  centered on open research infrastructure: the QUT ePrints institutional
-  repository exposes a live OAI-PMH metadata harvesting interface, and QUT
-  maintains several active research-group GitHub organizations (eResearch,
-  Centre for Robotics, Aerospace Systems, Digital Observatory). Most other
-  institutional systems (Library Search built on Ex Libris Primo VE / Alma, the
-  Timetable Planner, the QUT mobile app backend, and the SSO identity layer) are
-  internal or gated and do not publish open developer documentation.
+  Queensland University of Technology (QUT) is a public research university in Brisbane, Australia,
+  serving around 50,000 students with an applied emphasis in teaching and research. It is not an
+  API producer and it publishes no developer portal, no API keys and no OpenAPI of its own — but it
+  is one of the few institutions in this cohort whose machine-readable surfaces are genuinely its
+  own engineering rather than a vendor's contract running under its name. Three surfaces were
+  verified live on QUT-owned infrastructure inside APNIC allocation QUT-AU (AS7575), with no CNAME
+  to a managed platform: the QUT ePrints OAI-PMH 2.0 repository interface at eprints.qut.edu.au,
+  fully public and advertising oai_dc, oai_bibl, oai_openaire and uketd_dc; a self-hosted Shibboleth
+  SAML 2.0 identity provider at idp.qut.edu.au registered in the Australian Access Federation and
+  asserting the qut.edu.au scope; and a Keycloak OpenID Connect authorization server at
+  esoe.qut.edu.au publishing a complete discovery document, JWKS, RFC 8414 metadata, dynamic client
+  registration, PAR, CIBA and certificate-bound tokens, brokering interactive login to Microsoft
+  Entra ID. QUT eResearch additionally publishes a public agent plugin marketplace carrying an MCP
+  server definition, which is rare for a university — though the documentation host it targets,
+  docs.eres.qut.edu.au, resolves publicly to an RFC 1918 private address and is unreachable from
+  outside QUT. Everything else is bought: library discovery is an Ex Libris Primo VE tenancy, the
+  LMS is Instructure Canvas, research data is contributed to ARDC's national registry, and identity
+  is registered in DataCite, Crossref and ROR. Those relationships are recorded here; their
+  contracts are not, because they are not QUT's. There is no open data portal, no course or
+  timetable API, and no public route to a credential for the one authorization server QUT does run.
 type: Index
 deliveryModel:
-  model: saas
+  model: self-hosted
   open_source: false
-  commercial: true
-  callable_host: false
-  label: Hosted service · you call their endpoint
-  confidence: medium
+  commercial: false
+  callable_host: true
+  label: Institution-operated endpoints · you call QUT's own host
+  confidence: high
   source:
-  - pricing
-  generated: '2026-08-28'
-  method: derived
+    - probed
+  generated: '2026-09-01'
+  method: probed
 accessModel:
   pricing: free
-  onboarding: unknown
+  onboarding: none
   trial: false
-  try_now: false
-  public: false
-  label: Free
-  confidence: medium
+  try_now: true
+  public: true
+  label: Free and public for the harvesting and discovery surfaces; no public onboarding for the authorization server
+  confidence: high
   source:
-    - plans
-  generated: '2026-07-22'
-  method: derived
-position: Consumer
-access: 3rd-Party
+    - probed
+  generated: '2026-09-01'
+  method: probed
+position: Provider
+access: Public
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/qut.png
 url: https://raw.githubusercontent.com/api-evangelist/qut/refs/heads/main/apis.yml
 tags:
-  - Education
-  - Higher Education
   - University
-  - Research
-  - Open Data
+  - Higher Education
+  - Education
   - Australia
+  - Research
+  - Research Repository
+  - Identity Federation
   - OAI-PMH
+  - SAML
+  - OpenID Connect
+  - Institutional Repository
+  - Open Access
 created: '2026-06-03'
-modified: '2026-07-25'
+modified: '2026-09-01'
 specificationVersion: '0.23'
-apis: []
+apis:
+  - name: QUT ePrints OAI-PMH 2.0
+    description: >-
+      Public, unauthenticated OAI-PMH 2.0 metadata harvesting interface for QUT's institutional
+      research repository. All six verbs served. Advertises oai_dc, oai_bibl, oai_openaire and
+      uketd_dc. Identify names the repository "QUT ePrints", adminEmail eprints@qut.edu.au,
+      repositoryIdentifier eprints.qut.edu.au.
+    x-operator: institution
+    x-operator-basis: >-
+      eprints.qut.edu.au resolves to 131.181.196.14 with no CNAME; APNIC netname QUT-AU, org
+      ORG-QUOT1-AP "Queensland University of Technology", origin AS7575; TLS subject
+      O=QUEENSLAND UNIVERSITY OF TECHNOLOGY, CN=eprints.qut.edu.au. Software is open-source GNU
+      EPrints, self-hosted — not a vendor tenancy.
+    humanURL: https://www.library.qut.edu.au/about/collections/qut-eprints/
+    baseURL: https://eprints.qut.edu.au/cgi/oai2
+    properties:
+      - type: OpenAPI
+        url: openapi/qut-eprints-oai-pmh-openapi.yml
+      - type: JSONSchema
+        url: json-schema/qut-oai-pmh-identify-schema.json
+      - type: Documentation
+        url: https://www.library.qut.edu.au/about/collections/qut-eprints/
+    tags:
+      - OAI-PMH
+      - Research Repository
+      - Open Access
+
+  - name: QUT ESOE OpenID Connect Provider
+    description: >-
+      QUT's enterprise single sign-on authorization server, a Keycloak deployment on QUT's own
+      address space. Publishes OpenID Connect Discovery 1.0 metadata, an RFC 8414 authorization
+      server metadata document, a JWKS, and endpoints for dynamic client registration, PAR, CIBA,
+      device authorization, introspection and revocation. Discovery is fully public; obtaining a
+      client credential is not, and QUT documents no public route to one.
+    x-operator: institution
+    x-operator-basis: >-
+      esoe.qut.edu.au resolves to 131.181.118.129 with no CNAME; APNIC netname QUT-AU, org
+      ORG-QUOT1-AP, origin AS7575; TLS subject O=QUEENSLAND UNIVERSITY OF TECHNOLOGY,
+      CN=esoe.qut.edu.au.
+    humanURL: https://esoe.qut.edu.au/auth/realms/qut/.well-known/openid-configuration
+    baseURL: https://esoe.qut.edu.au/auth/realms/qut
+    properties:
+      - type: OpenAPI
+        url: openapi/qut-esoe-openid-connect-openapi.yml
+      - type: JSONSchema
+        url: json-schema/qut-esoe-openid-configuration-schema.json
+      - type: Authentication
+        url: authentication/qut-authentication.yml
+      - type: Scopes
+        url: scopes/qut-scopes.yml
+      - type: WellKnown
+        url: https://esoe.qut.edu.au/auth/realms/qut/.well-known/openid-configuration
+    tags:
+      - OpenID Connect
+      - OAuth 2.0
+      - Identity
+
+  - name: QUT Shibboleth Identity Provider
+    description: >-
+      QUT's self-hosted Shibboleth SAML 2.0 identity provider. Publishes per-entity metadata that
+      dereferences from its own entityID, asserts shibmd:Scope qut.edu.au, and is registered in the
+      Australian Access Federation production aggregate with OrganizationDisplayName "Queensland
+      University of Technology". Unlike most institution-branded IdPs in this cohort, it is not a
+      managed AAF Rapid IdP — QUT runs it on its own network.
+    x-operator: institution
+    x-operator-basis: >-
+      idp.qut.edu.au resolves to 131.181.196.172 with no CNAME on 8.8.8.8, 1.1.1.1 and 9.9.9.9;
+      APNIC netname QUT-AU, origin AS7575; DigiCert OV certificate to
+      O=QUEENSLAND UNIVERSITY OF TECHNOLOGY, CN=idp.qut.edu.au.
+    humanURL: https://aaf.edu.au/
+    baseURL: https://idp.qut.edu.au/idp/shibboleth
+    properties:
+      - type: IdentityFederation
+        url: identity-federation/qut-identity-federation.yml
+      - type: Metadata
+        url: identity-federation/qut-idp-saml-metadata.xml
+    tags:
+      - SAML
+      - Shibboleth
+      - Identity Federation
+
+  - name: QUT ePrints REST Interface
+    description: >-
+      The GNU EPrints REST dataset interface. The index is open and the payload is closed — /rest/,
+      /rest/eprint/ and /rest/subject/ return 200 without credentials, while every individual record
+      returns 401. Recorded with the 401s documented, because a contract that shows only the
+      unreachable success overstates the footprint.
+    x-operator: institution
+    x-operator-basis: Same host and same evidence as the OAI-PMH surface — 131.181.196.14, APNIC QUT-AU, AS7575.
+    humanURL: https://eprints.qut.edu.au/
+    baseURL: https://eprints.qut.edu.au/rest
+    properties:
+      - type: OpenAPI
+        url: openapi/qut-eprints-rest-openapi.yml
+    tags:
+      - Research Repository
+      - Partially Gated
+
+  - name: QUT eResearch Agent Plugin Marketplace
+    description: >-
+      A public agent plugin marketplace published by QUT eResearch, carrying one MCP server
+      definition that wraps the QUT eResearch documentation site. Institution-authored and a rare
+      find for a university. Its MCP target, docs.eres.qut.edu.au, resolves publicly to 172.30.92.51,
+      an RFC 1918 private address, so a client outside QUT's network cannot reach it.
+    x-operator: institution
+    x-operator-basis: >-
+      Repository owned by the eresearchqut GitHub organization, "eResearch Queensland University of
+      Technology", whose declared homepage is https://www.qut.edu.au/research/office-of-eresearch.
+      Manifests name the author "QUT eResearch". Judged by what it says about itself, not by GitHub
+      being the host.
+    humanURL: https://github.com/eresearchqut/eresearch-agent-plugins
+    baseURL: https://github.com/eresearchqut/eresearch-agent-plugins
+    properties:
+      - type: MCP
+        url: mcp/qut-eresearch-docs-mcp.yml
+      - type: SourceCode
+        url: https://github.com/eresearchqut/eresearch-agent-plugins
+    tags:
+      - MCP
+      - Agent Tooling
+
+  - name: QUT Library Discovery (Ex Libris Primo VE tenant)
+    description: >-
+      QUT's library discovery layer runs on Ex Libris Primo VE / Alma under view id 61QUT_INST:QUT.
+      The collection and the configuration are QUT's; the platform and any API contract are
+      Ex Libris's. QUT publishes no keys and no developer documentation for it. Recorded as a
+      relationship; the vendor's contract is deliberately not saved here.
+    x-operator: tenant
+    x-operator-basis: Institution-specific view id on a generic vendor host shared by every Ex Libris customer.
+    humanURL: https://qut.primo.exlibrisgroup.com/discovery/search?vid=61QUT_INST:QUT
+    baseURL: https://qut.primo.exlibrisgroup.com/discovery/search?vid=61QUT_INST:QUT
+    tags:
+      - Library
+      - Vendor Platform
+
+  - name: QUT Canvas LMS (Instructure tenant)
+    description: >-
+      QUT's learning management system, an Instructure Canvas tenancy on a QUT hostname, front-ended
+      by Microsoft Entra ID sign-in. Canvas is an LTI 1.3 platform and exposes Instructure's REST
+      API, but that conformance and that contract belong to Instructure. QUT publishes no developer
+      access to it.
+    x-operator: tenant
+    x-operator-basis: >-
+      CNAME TENANCY, and the reason a hostname-only verdict gets this one wrong. canvas.qut.edu.au
+      is under QUT's own registrable domain, so a host rule reads it as institution-operated — but
+      it CNAMEs to qut-prod-vanity.instructure.com and terminates on 13.33.67.61 / 13.33.67.118
+      (Amazon CloudFront). It returns 200 serving a Microsoft-copyright sign-in page. The LMS
+      software, the APIs and the LTI 1.3 conformance are Instructure's; the vanity hostname and the
+      student data are QUT's.
+    humanURL: https://canvas.qut.edu.au/
+    baseURL: https://canvas.qut.edu.au/
+    tags:
+      - Learning Management
+      - Vendor Platform
+
+  - name: QUT collection in ARDC Research Data Australia
+    description: >-
+      QUT contributes a named group to the Australian Research Data Commons national registry.
+      A live query for group "Queensland University of Technology" returns 926 registry objects —
+      484 collections, 397 parties, 35 activities and 10 services — across ARDC data sources 106 and
+      107. The registry API is ARDC's; the collection within it is QUT's, which is exactly the
+      tenancy this pipeline exists to record rather than delete.
+    x-operator: tenant
+    x-operator-basis: A named institutional scope on a shared national platform QUT does not operate.
+    humanURL: https://researchdata.edu.au/
+    baseURL: https://researchdata.edu.au/api/registry/records?group=Queensland%20University%20of%20Technology
+    tags:
+      - Research Data
+      - National Infrastructure
+
+  - name: DataCite DOI and RAiD registration
+    description: >-
+      QUT registers persistent identifiers with DataCite through the ARDC consortium. Two clients
+      are evidenced: ARDCX.QUT1, a repository client registered 2020 holding 535 DOIs, and
+      UUAG.IXKMSM, a RAiD registry client registered 2024 for QUT Research Infrastructure. This is a
+      membership and a fact about QUT; DataCite's own API is not saved as QUT's contract and this
+      entry is never to be deleted as a "shared host".
+    x-operator: registry
+    x-operator-basis: An identifier registry QUT is registered in, evidenced by client symbol.
+    humanURL: https://api.datacite.org/clients/ardcx.qut1
+    baseURL: https://api.datacite.org/clients/ardcx.qut1
+    tags:
+      - DataCite
+      - Persistent Identifiers
+
+  - name: Crossref membership
+    description: >-
+      QUT is a Crossref member, id 3230, primary-name "Queensland University of Technology",
+      verified live against Crossref's member API. Recorded as a membership; Crossref's API is not
+      QUT's contract.
+    x-operator: registry
+    x-operator-basis: An identifier registry QUT is a member of, evidenced by member id.
+    humanURL: https://www.crossref.org/
+    baseURL: https://api.crossref.org/members/3230
+    tags:
+      - Crossref
+      - Persistent Identifiers
+
+  - name: ROR registration
+    description: >-
+      QUT's Research Organization Registry identifier is https://ror.org/03pnv4752. The canonical
+      machine-readable identifier for the institution itself, used across DataCite, Crossref and
+      ORCID metadata.
+    x-operator: registry
+    x-operator-basis: An organization registry QUT is registered in.
+    humanURL: https://ror.org/03pnv4752
+    baseURL: https://api.ror.org/v2/organizations/03pnv4752
+    tags:
+      - ROR
+      - Persistent Identifiers
+
+  - name: Australian Access Federation membership
+    description: >-
+      QUT is a member of the Australian Access Federation, which is interfederated with eduGAIN.
+      Five entity descriptors naming QUT appear in the production aggregate; three are QUT-operated
+      (the IdP at idp.qut.edu.au and service providers esoe.qut.edu.au and webwork.qut.edu.au) and
+      two belong to the QUT Guild and are operated by Membership Solutions Limited. A federation is
+      shared by definition and the IdP behind it is QUT's — this entry is never to be deleted as a
+      shared host.
+    x-operator: federation
+    x-operator-basis: >-
+      National identity federation carrying QUT's own Shibboleth IdP metadata, with
+      OrganizationDisplayName "Queensland University of Technology".
+    humanURL: https://aaf.edu.au/
+    baseURL: https://md.aaf.edu.au/aaf-metadata.xml
+    properties:
+      - type: IdentityFederation
+        url: identity-federation/qut-identity-federation.yml
+    tags:
+      - Identity Federation
+      - eduGAIN
+      - SAML
 common:
-  - type: DomainSecurity
-    url: security/qut-domain-security.yml
   - type: Website
     url: https://www.qut.edu.au/
+  - type: IdentityFederation
+    url: identity-federation/qut-identity-federation.yml
+  - type: Conformance
+    url: conformance/qut-conformance.yml
+  - type: Authentication
+    url: authentication/qut-authentication.yml
+  - type: Scopes
+    url: scopes/qut-scopes.yml
+  - type: Errors
+    url: errors/qut-errors.yml
+  - type: Lifecycle
+    url: lifecycle/qut-lifecycle.yml
+  - type: Rules
+    url: rules/qut-openapi-rules.yml
+  - type: Vocabulary
+    url: vocabulary/qut-vocabulary.yml
+  - type: JSONLD
+    url: json-ld/qut-context.jsonld
+  - type: MCP
+    url: mcp/qut-eresearch-docs-mcp.yml
+  - type: ResearchRepository
+    url: https://eprints.qut.edu.au/
+  - type: LibraryCatalog
+    url: https://qut.primo.exlibrisgroup.com/discovery/search?vid=61QUT_INST:QUT
+  - type: ResearchComputing
+    url: https://www.qut.edu.au/research/office-of-eresearch
+  - type: Documentation
+    url: https://www.library.qut.edu.au/about/collections/qut-eprints/
   - type: GitHub
     url: https://github.com/eresearchqut
+  - type: SourceCode
+    url: https://github.com/qcr
   - type: LinkedIn
     url: https://au.linkedin.com/school/queensland-university-of-technology/
+  - type: DomainSecurity
+    url: security/qut-domain-security.yml
   - type: Plans
     url: plans/qut-plans-pricing.yml
   - type: RateLimits
@@ -69,8 +346,109 @@ common:
     url: finops/qut-finops.yml
   - type: Review
     url: review.yml
-  - type: About
-    url: https://www.library.qut.edu.au/about/collections/qut-eprints/
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-coverage:
+  state: covered
+  reason: covered
+  detail: >-
+    Three institution-operated machine surfaces were confirmed live and confirmed QUT-owned by IP
+    and certificate rather than by hostname: eprints.qut.edu.au (131.181.196.14),
+    idp.qut.edu.au (131.181.196.172) and esoe.qut.edu.au (131.181.118.129), all inside APNIC
+    allocation QUT-AU / ORG-QUOT1-AP, origin AS7575 "Queensland University of Technology", none
+    with a CNAME to a managed platform, each behind a DigiCert OV certificate issued to
+    O=QUEENSLAND UNIVERSITY OF TECHNOLOGY. That check is the one that changed the answer for Monash
+    and Melbourne, whose institution-branded IdPs turned out to be AAF Rapid tenancies on Amazon
+    address space; QUT passes it. Two of the three publish complete machine-readable contracts of
+    their own — an OAI-PMH 2.0 Identify response and a full OpenID Connect / RFC 8414 discovery
+    document — so unlike most of this cohort, the OpenAPIs in this repository are derived from
+    documents QUT actually serves, not invented around a link.
+    QUT publishes no OpenAPI, no developer portal, no API keys and no self-service registration.
+    The authorization server is standards-complete and there is no public path to a credential for
+    it; the EPrints REST index is open while every record behind it returns 401. Both are recorded
+    as observed rather than smoothed over.
+    Five relationships are real institutional facts on platforms QUT does not run and their vendor
+    contracts are deliberately not saved: Ex Libris Primo VE, Instructure Canvas, ARDC Research Data
+    Australia (926 registry objects under the QUT group), DataCite (ARDCX.QUT1, 535 DOIs, plus RAiD
+    client UUAG.IXKMSM) and Crossref (member 3230). The AAF federation membership and the ROR
+    registration are recorded for the same reason and must never be deleted as shared hosts.
+    Two negative findings worth carrying. First, docs.eres.qut.edu.au — the target of the MCP server
+    QUT eResearch publishes in its public agent plugin marketplace — resolves on every public
+    resolver to 172.30.92.51, an RFC 1918 private address, so the published plugin cannot reach its
+    source from outside QUT. Second, the principal web estate at www.qut.edu.au sits behind a
+    Cloudflare managed challenge (cf-mitigated: challenge) that returns 403 to every non-browser
+    client including a request for robots.txt, which makes QUT's own crawl directives unreadable to
+    the crawlers they address. That is live-but-unreadable — a limit on our probe, not a gap in QUT.
+    One CNAME tenancy was found that the pre-computed DNS pass had reported as none:
+    canvas.qut.edu.au is on QUT's own registrable domain but CNAMEs to
+    qut-prod-vanity.instructure.com and terminates on Amazon CloudFront (13.33.67.61,
+    13.33.67.118). A hostname-only verdict credits that surface to QUT; it is Instructure's.
+    No open data portal exists (data.qut.edu.au NXDOMAIN), no developer portal exists
+    (developer.qut.edu.au NXDOMAIN), and no course or timetable API was found
+    (timetable.qut.edu.au NXDOMAIN). api.qut.edu.au does resolve into QUT's own address space and
+    answers with a bare text/plain 404 on every path probed, including /openapi.json, /swagger.json,
+    /docs, /v1, /api, /health and /graphql — an API gateway with no publicly routed surface.
+  assessed: '2026-09-01'
+  method: probed
+  evidence:
+    - url: https://eprints.qut.edu.au/cgi/oai2?verb=Identify
+      status: 200
+    - url: https://eprints.qut.edu.au/cgi/oai2?verb=ListMetadataFormats
+      status: 200
+    - url: https://eprints.qut.edu.au/cgi/oai2?verb=ListSets
+      status: 200
+    - url: https://eprints.qut.edu.au/rest/
+      status: 200
+    - url: https://eprints.qut.edu.au/rest/subject/
+      status: 200
+    - url: https://eprints.qut.edu.au/rest/eprint/4.xml
+      status: 401
+    - url: https://esoe.qut.edu.au/auth/realms/qut/.well-known/openid-configuration
+      status: 200
+    - url: https://esoe.qut.edu.au/auth/realms/qut/.well-known/oauth-authorization-server
+      status: 200
+    - url: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/certs
+      status: 200
+    - url: https://esoe.qut.edu.au/auth/realms/qut/protocol/saml/descriptor
+      status: 200
+    - url: https://idp.qut.edu.au/idp/shibboleth
+      status: 200
+    - url: https://md.aaf.edu.au/aaf-metadata.xml
+      status: 200
+    - url: https://api.datacite.org/clients/ardcx.qut1
+      status: 200
+    - url: https://api.datacite.org/clients/uuag.ixkmsm
+      status: 200
+    - url: https://api.crossref.org/members/3230
+      status: 200
+    - url: https://api.ror.org/v2/organizations/03pnv4752
+      status: 200
+    - url: https://researchdata.edu.au/api/registry/records?group=Queensland%20University%20of%20Technology
+      status: 200
+    - url: https://qut.primo.exlibrisgroup.com/discovery/search?vid=61QUT_INST:QUT
+      status: 200
+    - url: https://canvas.qut.edu.au/
+      status: 200
+    - url: https://researchdatafinder.qut.edu.au/
+      status: 200
+    - url: https://www.library.qut.edu.au/about/collections/qut-eprints/
+      status: 200
+    - url: https://github.com/eresearchqut/eresearch-agent-plugins
+      status: 200
+    - url: https://api.qut.edu.au/openapi.json
+      status: 404
+    - url: https://researchdatafinder.qut.edu.au/api
+      status: 404
+    - url: https://www.qut.edu.au/
+      status: 403
+    - url: https://www.qut.edu.au/robots.txt
+      status: 403
+    - url: https://docs.eres.qut.edu.au/
+      status: 0
+    - url: https://data.qut.edu.au/
+      status: 0
+    - url: https://developer.qut.edu.au/
+      status: 0
+    - url: https://timetable.qut.edu.au/
+      status: 0
