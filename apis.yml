@@ -352,6 +352,8 @@ apis:
   humanURL: https://www.library.qut.edu.au/about/collections/qut-eprints/
   baseURL: https://eprints.qut.edu.au/cgi/oai2
   tags:
+  - Tokens
+  tags_raw:
   - Token
   properties:
   - type: OpenAPI
