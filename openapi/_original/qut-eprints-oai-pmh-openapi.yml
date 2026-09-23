@@ -1,0 +1,193 @@
+openapi: 3.1.0
+info:
+  title: QUT ePrints OAI-PMH 2.0 Interface
+  version: '2.0'
+  summary: The Open Archives Initiative Protocol for Metadata Harvesting interface of QUT's institutional repository.
+  description: >-
+    Queensland University of Technology operates QUT ePrints, its institutional research
+    repository, on GNU EPrints software at eprints.qut.edu.au, and exposes a complete, public,
+    unauthenticated OAI-PMH 2.0 harvesting interface at /cgi/oai2.
+
+    OPERATOR: institution. eprints.qut.edu.au resolves to 131.181.196.14 with no CNAME, inside the
+    APNIC allocation QUT-AU / ORG-QUOT1-AP, origin AS7575 "Queensland University of Technology",
+    behind a DigiCert OV certificate issued to O=QUEENSLAND UNIVERSITY OF TECHNOLOGY. The software
+    is open-source GNU EPrints, self-hosted by QUT — this is not a vendor tenancy. The Identify
+    response names the repository "QUT ePrints", admin eprints@qut.edu.au, repositoryIdentifier
+    eprints.qut.edu.au.
+
+    THIS DOCUMENT WAS DERIVED, NOT PUBLISHED BY QUT. QUT publishes an OAI-PMH endpoint; it does not
+    publish an OpenAPI. Every verb, parameter, metadata prefix and set below is transcribed from
+    live responses captured 2026-09-01 and archived under examples/. Nothing is invented.
+
+    LICENSING, from the Identify response's own eprints description block: "Anyone may access the
+    metadata free of charge ... may be re-used in any medium without prior permission for
+    not-for-profit purposes."
+  contact:
+    name: QUT ePrints
+    email: eprints@qut.edu.au
+    url: https://www.library.qut.edu.au/about/collections/qut-eprints/
+  x-operator: institution
+  x-operator-basis: >-
+    DNS + APNIC whois + TLS subject + protocol self-description. eprints.qut.edu.au ->
+    131.181.196.14 (no CNAME); netname QUT-AU, org ORG-QUOT1-AP, origin AS7575; certificate subject
+    O=QUEENSLAND UNIVERSITY OF TECHNOLOGY, CN=eprints.qut.edu.au; Identify returns
+    repositoryName "QUT ePrints", adminEmail eprints@qut.edu.au.
+  x-generated: '2026-09-01'
+  x-method: derived
+  x-source: https://eprints.qut.edu.au/cgi/oai2?verb=Identify
+  x-standard: oai-pmh
+servers:
+  - url: https://eprints.qut.edu.au/cgi
+    description: QUT ePrints OAI-PMH 2.0 base (production, live 2026-09-01)
+tags:
+  - name: OAI-PMH
+    description: The six OAI-PMH 2.0 verbs, all dispatched from a single /oai2 resource by the `verb` parameter.
+paths:
+  /oai2:
+    get:
+      tags: [OAI-PMH]
+      operationId: oaiRequest
+      summary: OAI-PMH 2.0 request
+      description: >-
+        Single dispatch resource. The `verb` parameter selects the operation. All six OAI-PMH 2.0
+        verbs are served: Identify, ListMetadataFormats, ListSets, ListIdentifiers, ListRecords and
+        GetRecord. Public and unauthenticated — verified 200 on Identify, ListMetadataFormats and
+        ListSets on 2026-09-01. Every response is an OAI-PMH XML envelope; protocol-level failures
+        are returned as HTTP 200 with an <error> element, not as an HTTP error status.
+      security: []
+      parameters:
+        - name: verb
+          in: query
+          required: true
+          description: The OAI-PMH verb to execute.
+          schema:
+            type: string
+            enum: [Identify, ListMetadataFormats, ListSets, ListIdentifiers, ListRecords, GetRecord]
+          example: Identify
+        - name: metadataPrefix
+          in: query
+          required: false
+          description: >-
+            Metadata format. Required for ListIdentifiers, ListRecords and GetRecord. The formats
+            this repository actually advertises are oai_dc, oai_bibl, oai_openaire and uketd_dc,
+            read from a live ListMetadataFormats response.
+          schema:
+            type: string
+            enum: [oai_dc, oai_bibl, oai_openaire, uketd_dc]
+          example: oai_dc
+        - name: identifier
+          in: query
+          required: false
+          description: >-
+            OAI identifier of a single record. Required for GetRecord. Scheme `oai`, delimiter `:`,
+            repositoryIdentifier `eprints.qut.edu.au` — the Identify response gives the sample
+            identifier oai:eprints.qut.edu.au:249243.
+          schema:
+            type: string
+            pattern: '^oai:eprints\.qut\.edu\.au:[0-9]+$'
+          example: 'oai:eprints.qut.edu.au:249243'
+        - name: set
+          in: query
+          required: false
+          description: >-
+            Selective harvesting by set. QUT ePrints encodes setSpec values as hex of the underlying
+            EPrints filter, e.g. 74797065733D61727469636C65 is hex for `types=article`.
+          schema: { type: string }
+          example: '74797065733D61727469636C65'
+        - name: from
+          in: query
+          required: false
+          description: Lower bound on datestamp. Granularity is YYYY-MM-DDThh:mm:ssZ.
+          schema: { type: string, format: date-time }
+        - name: until
+          in: query
+          required: false
+          description: Upper bound on datestamp.
+          schema: { type: string, format: date-time }
+        - name: resumptionToken
+          in: query
+          required: false
+          description: Flow-control token returned by an incomplete list response. Exclusive of all other parameters except verb.
+          schema: { type: string }
+      responses:
+        '200':
+          description: >-
+            OAI-PMH envelope. Carries the verb's payload on success, or an <error> element with an
+            OAI error code on a protocol failure. This endpoint returns 200 in both cases.
+          content:
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/OAIPMHEnvelope'
+              examples:
+                identify:
+                  summary: verb=Identify, live 2026-09-01
+                  externalValue: examples/qut-eprints-oai-identify.xml
+                listMetadataFormats:
+                  summary: verb=ListMetadataFormats, live 2026-09-01
+                  externalValue: examples/qut-eprints-oai-listmetadataformats.xml
+components:
+  schemas:
+    OAIPMHEnvelope:
+      type: object
+      description: >-
+        The OAI-PMH 2.0 response envelope, as defined by
+        http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd. Modelled here as an object for tooling;
+        the wire format is XML.
+      required: [responseDate, request]
+      properties:
+        responseDate: { type: string, format: date-time }
+        request:
+          type: object
+          properties:
+            verb: { type: string }
+            value: { type: string, format: uri, examples: ['https://eprints.qut.edu.au/cgi/oai2'] }
+        error:
+          $ref: '#/components/schemas/OAIError'
+        Identify:
+          $ref: '#/components/schemas/Identify'
+        ListMetadataFormats:
+          type: array
+          items: { $ref: '#/components/schemas/MetadataFormat' }
+    Identify:
+      type: object
+      description: Values below are the live values returned by this repository on 2026-09-01.
+      required: [repositoryName, baseURL, protocolVersion, adminEmail, earliestDatestamp, deletedRecord, granularity]
+      properties:
+        repositoryName: { type: string, const: 'QUT ePrints' }
+        baseURL: { type: string, format: uri, const: 'https://eprints.qut.edu.au/cgi/oai2' }
+        protocolVersion: { type: string, const: '2.0' }
+        adminEmail: { type: string, format: email, const: 'eprints@qut.edu.au' }
+        earliestDatestamp: { type: string, format: date-time, const: '2025-01-25T14:48:30Z' }
+        deletedRecord: { type: string, const: 'persistent' }
+        granularity: { type: string, const: 'YYYY-MM-DDThh:mm:ssZ' }
+        oaiIdentifier:
+          type: object
+          properties:
+            scheme: { type: string, const: 'oai' }
+            repositoryIdentifier: { type: string, const: 'eprints.qut.edu.au' }
+            delimiter: { type: string, const: ':' }
+            sampleIdentifier: { type: string, const: 'oai:eprints.qut.edu.au:249243' }
+    MetadataFormat:
+      type: object
+      required: [metadataPrefix, schema, metadataNamespace]
+      properties:
+        metadataPrefix: { type: string, enum: [oai_dc, oai_bibl, oai_openaire, uketd_dc] }
+        schema: { type: string, format: uri }
+        metadataNamespace: { type: string, format: uri }
+    OAIError:
+      type: object
+      required: [code]
+      properties:
+        code:
+          type: string
+          enum:
+            - badArgument
+            - badResumptionToken
+            - badVerb
+            - cannotDisseminateFormat
+            - idDoesNotExist
+            - noRecordsMatch
+            - noMetadataFormats
+            - noSetHierarchy
+        message: { type: string }
+security: []

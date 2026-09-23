@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor entityID="https://idp.qut.edu.au/idp/shibboleth"
+                  xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+                  xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                  xmlns:shibmd="urn:mace:shibboleth:metadata:1.0"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <IDPSSODescriptor protocolSupportEnumeration="urn:mace:shibboleth:1.0 urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+
+        <Extensions>
+            <shibmd:Scope regexp="false">qut.edu.au</shibmd:Scope>
+        </Extensions>
+
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+MIIDIzCCAgugAwIBAgIUAbqTg2xipFLh9hmUox2GuHfg6TgwDQYJKoZIhvcNAQEF
+BQAwGTEXMBUGA1UEAxMOaWRwLnF1dC5lZHUuYXUwHhcNMDkwNDIzMDAzNTAwWhcN
+MjkwNDIzMDAzNTAwWjAZMRcwFQYDVQQDEw5pZHAucXV0LmVkdS5hdTCCASIwDQYJ
+KoZIhvcNAQEBBQADggEPADCCAQoCggEBAJqFp+noL8lrtdLkZf/zSFgQc1dN3wwl
+nzUlkZo0gkpff43LLbksM9aF3D3CSIsg0TjhtoKcJrrmuTAgikIAOp3jXVFLl+II
++MpqDOiowtMvOJQb5nwt6kxrX5f6pCSgjCx80wU22WxbBOZz6VO0aZiikLPE1AW8
+PmWA4274+LMIYnuAMQGxsOGIpAj/Zsm0gVP8EhA0AaFdTUL18vzWfZYyDO0gk8z9
+S/j3JFwwIaASXjnQEZbeA4k51+YWCj4+9sMIaqIYsa43w1TG2luM6Ttz9+4qfe2/
+tJ8rMXqe6Q2QdV9M/jS9/Xz8inIqJgAP327BfJ6VfTDbvKmB55QCCK8CAwEAAaNj
+MGEwQAYDVR0RBDkwN4IOaWRwLnF1dC5lZHUuYXWGJWh0dHBzOi8vaWRwLnF1dC5l
+ZHUuYXUvaWRwL3NoaWJib2xldGgwHQYDVR0OBBYEFPTFv0iRo+S9X+S6dgmIMf3M
+u6ivMA0GCSqGSIb3DQEBBQUAA4IBAQBu0ScHvZjNgkr6IxT6IfMwXAwRg1ZaRPf5
+X9y0sCGKuiXC9EVpyLP9ml1U3FD8rvAqP7NKvsypfhlwGBaJArYf5WmzijS2pgEF
+nFfXoZsBcisfvvBJBUpVtHFZ+XcLDDXGGxFSeVaDeFcF8BxRnAaG8eVT/T/jPvWr
+uChnxqaw8MyEOWyLdC42qm4xseccgqDMhIuT2syUbTH+R2cWBk7FUGlDQx5OVrld
+6Y7b992McdGJaRh9o2n96MkFhh/4Vjdcc3IVcys/dzpGT7f6hgNgUHTOSf/LoUYk
+m9S9bfkRWSppIsxC3MO7baqtf/y9np1mUr9a02/8rLVhyJ1uHneU
+</ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding"
+                                   Location="https://idp.qut.edu.au:8443/idp/profile/SAML1/SOAP/ArtifactResolution"
+                                   index="1"/>
+
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+                                   Location="https://idp.qut.edu.au:8443/idp/profile/SAML2/SOAP/ArtifactResolution"
+                                   index="2"/>
+
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://idp.qut.edu.au/idp/profile/SAML2/Redirect/SLO"/>
+
+        <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</NameIDFormat>
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+
+        <SingleSignOnService Binding="urn:mace:shibboleth:1.0:profiles:AuthnRequest"
+                             Location="https://idp.qut.edu.au/idp/profile/Shibboleth/SSO" />
+
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                             Location="https://idp.qut.edu.au/idp/profile/SAML2/POST/SSO" />
+
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"
+                             Location="https://idp.qut.edu.au/idp/profile/SAML2/POST-SimpleSign/SSO" />
+
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                             Location="https://idp.qut.edu.au/idp/profile/SAML2/Redirect/SSO" />
+    </IDPSSODescriptor>
+
+    <AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+
+        <Extensions>
+            <shibmd:Scope regexp="false">qut.edu.au</shibmd:Scope>
+        </Extensions>
+
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+MIIDIzCCAgugAwIBAgIUAbqTg2xipFLh9hmUox2GuHfg6TgwDQYJKoZIhvcNAQEF
+BQAwGTEXMBUGA1UEAxMOaWRwLnF1dC5lZHUuYXUwHhcNMDkwNDIzMDAzNTAwWhcN
+MjkwNDIzMDAzNTAwWjAZMRcwFQYDVQQDEw5pZHAucXV0LmVkdS5hdTCCASIwDQYJ
+KoZIhvcNAQEBBQADggEPADCCAQoCggEBAJqFp+noL8lrtdLkZf/zSFgQc1dN3wwl
+nzUlkZo0gkpff43LLbksM9aF3D3CSIsg0TjhtoKcJrrmuTAgikIAOp3jXVFLl+II
++MpqDOiowtMvOJQb5nwt6kxrX5f6pCSgjCx80wU22WxbBOZz6VO0aZiikLPE1AW8
+PmWA4274+LMIYnuAMQGxsOGIpAj/Zsm0gVP8EhA0AaFdTUL18vzWfZYyDO0gk8z9
+S/j3JFwwIaASXjnQEZbeA4k51+YWCj4+9sMIaqIYsa43w1TG2luM6Ttz9+4qfe2/
+tJ8rMXqe6Q2QdV9M/jS9/Xz8inIqJgAP327BfJ6VfTDbvKmB55QCCK8CAwEAAaNj
+MGEwQAYDVR0RBDkwN4IOaWRwLnF1dC5lZHUuYXWGJWh0dHBzOi8vaWRwLnF1dC5l
+ZHUuYXUvaWRwL3NoaWJib2xldGgwHQYDVR0OBBYEFPTFv0iRo+S9X+S6dgmIMf3M
+u6ivMA0GCSqGSIb3DQEBBQUAA4IBAQBu0ScHvZjNgkr6IxT6IfMwXAwRg1ZaRPf5
+X9y0sCGKuiXC9EVpyLP9ml1U3FD8rvAqP7NKvsypfhlwGBaJArYf5WmzijS2pgEF
+nFfXoZsBcisfvvBJBUpVtHFZ+XcLDDXGGxFSeVaDeFcF8BxRnAaG8eVT/T/jPvWr
+uChnxqaw8MyEOWyLdC42qm4xseccgqDMhIuT2syUbTH+R2cWBk7FUGlDQx5OVrld
+6Y7b992McdGJaRh9o2n96MkFhh/4Vjdcc3IVcys/dzpGT7f6hgNgUHTOSf/LoUYk
+m9S9bfkRWSppIsxC3MO7baqtf/y9np1mUr9a02/8rLVhyJ1uHneU
+
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+
+        <AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding"
+                          Location="https://idp.qut.edu.au:8443/idp/profile/SAML1/SOAP/AttributeQuery" />
+
+        <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+                          Location="https://idp.qut.edu.au:8443/idp/profile/SAML2/SOAP/AttributeQuery" />
+
+        <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</NameIDFormat>
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+
+    </AttributeAuthorityDescriptor>
+
+</EntityDescriptor>

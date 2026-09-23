@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/qut/refs/heads/main/json-schema/qut-oai-pmh-identify-schema.json",
+  "title": "QUT ePrints OAI-PMH Identify Response",
+  "description": "Schema for the Identify response of the QUT ePrints OAI-PMH 2.0 interface. Derived from the live XML response at https://eprints.qut.edu.au/cgi/oai2?verb=Identify (HTTP 200, 2026-09-01), archived at examples/qut-eprints-oai-identify.xml. The wire format is XML; this schema models the equivalent object for tooling. Const values are the values this repository actually returns.",
+  "x-generated": "2026-09-01",
+  "x-method": "derived",
+  "x-source": "https://eprints.qut.edu.au/cgi/oai2?verb=Identify",
+  "x-operator": "institution",
+  "type": "object",
+  "required": ["repositoryName", "baseURL", "protocolVersion", "adminEmail", "earliestDatestamp", "deletedRecord", "granularity"],
+  "additionalProperties": false,
+  "properties": {
+    "repositoryName": { "type": "string", "const": "QUT ePrints" },
+    "baseURL": { "type": "string", "format": "uri", "const": "https://eprints.qut.edu.au/cgi/oai2" },
+    "protocolVersion": { "type": "string", "const": "2.0" },
+    "adminEmail": { "type": "array", "items": { "type": "string", "format": "email" }, "examples": [["eprints@qut.edu.au"]] },
+    "earliestDatestamp": { "type": "string", "format": "date-time", "const": "2025-01-25T14:48:30Z" },
+    "deletedRecord": { "type": "string", "enum": ["no", "transient", "persistent"], "const": "persistent" },
+    "granularity": { "type": "string", "enum": ["YYYY-MM-DD", "YYYY-MM-DDThh:mm:ssZ"], "const": "YYYY-MM-DDThh:mm:ssZ" },
+    "compression": { "type": "array", "items": { "type": "string" } },
+    "description": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "oai-identifier",
+            "required": ["scheme", "repositoryIdentifier", "delimiter", "sampleIdentifier"],
+            "properties": {
+              "scheme": { "type": "string", "const": "oai" },
+              "repositoryIdentifier": { "type": "string", "const": "eprints.qut.edu.au" },
+              "delimiter": { "type": "string", "const": ":" },
+              "sampleIdentifier": { "type": "string", "const": "oai:eprints.qut.edu.au:249243" }
+            }
+          },
+          {
+            "type": "object",
+            "title": "eprints description",
+            "properties": {
+              "content": { "type": "object", "properties": { "text": { "type": "string" } } },
+              "metadataPolicy": { "type": "object", "properties": { "text": { "type": "string" } } },
+              "dataPolicy": { "type": "object", "properties": { "text": { "type": "string" } } },
+              "submissionPolicy": { "type": "object", "properties": { "text": { "type": "string" } } }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

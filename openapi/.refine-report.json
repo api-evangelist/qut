@@ -1,0 +1,40 @@
+{
+  "provider": "qut",
+  "sources": [
+    "_original/qut-eprints-oai-pmh-openapi.yml",
+    "_original/qut-eprints-rest-openapi.yml",
+    "_original/qut-esoe-openid-connect-openapi.yml"
+  ],
+  "outputs": [
+    "qut-oai-pmh-api-openapi.yml",
+    "qut-datasets-api-openapi.yml",
+    "qut-authorization-api-openapi.yml",
+    "qut-client-registration-api-openapi.yml",
+    "qut-discovery-api-openapi.yml",
+    "qut-identity-api-openapi.yml",
+    "qut-token-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "3 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (3 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "qut-eprints-oai-pmh-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "qut-eprints-rest-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "qut-esoe-openid-connect-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "_original/qut-esoe-openid-connect-openapi_2.yml: archived document superseded by a larger archived document",
+    "_original/qut-eprints-rest-openapi_2.yml: archived document superseded by a larger archived document",
+    "_original/qut-eprints-oai-pmh-openapi_2.yml: archived document superseded by a larger archived document",
+    "qut-authorization-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qut-client-registration-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qut-datasets-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qut-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qut-identity-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qut-oai-pmh-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qut-token-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

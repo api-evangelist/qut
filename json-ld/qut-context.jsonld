@@ -14,40 +14,106 @@
     "Repository": "schema:DataCatalog",
     "Dataset": "schema:Dataset",
     "identifier": "schema:identifier",
+    "PropertyValue": "schema:PropertyValue",
+    "propertyID": "schema:propertyID",
+    "value": "schema:value",
     "datePublished": "schema:datePublished",
     "creator": "schema:creator",
     "publisher": "schema:publisher",
     "license": "schema:license",
     "isPartOf": "schema:isPartOf",
+    "memberOf": "schema:memberOf",
     "metadataFormat": "qut:metadataFormat",
     "oaiBaseURL": {
       "@id": "qut:oaiBaseURL",
       "@type": "@id"
     },
-    "protocolVersion": "qut:protocolVersion"
+    "protocolVersion": "qut:protocolVersion",
+    "samlEntityID": {
+      "@id": "qut:samlEntityID",
+      "@type": "@id"
+    },
+    "oidcIssuer": {
+      "@id": "qut:oidcIssuer",
+      "@type": "@id"
+    },
+    "federationScope": "qut:federationScope"
   },
+  "x-generated": "2026-09-01",
+  "x-method": "derived",
+  "x-source": "Live probes of eprints.qut.edu.au, idp.qut.edu.au, esoe.qut.edu.au, md.aaf.edu.au, api.ror.org, api.crossref.org and api.datacite.org, 2026-09-01. Every identifier below dereferences to an HTTP 200 response naming Queensland University of Technology.",
   "@type": "Organization",
   "name": "Queensland University of Technology",
   "url": "https://www.qut.edu.au/",
-  "description": "Public research university based in Brisbane, Australia, serving around 50,000 students with an applied emphasis in teaching and research.",
+  "description": "Public research university based in Brisbane, Australia, serving around 50,000 students with an applied emphasis in teaching and research. Its public machine-readable footprint is three institution-operated surfaces: an OAI-PMH 2.0 repository interface, a self-hosted Shibboleth SAML 2.0 identity provider, and a Keycloak OpenID Connect authorization server.",
   "logo": "https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg",
   "email": "eprints@qut.edu.au",
+  "identifier": [
+    {
+      "@type": "PropertyValue",
+      "propertyID": "ROR",
+      "value": "https://ror.org/03pnv4752"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "Crossref Member ID",
+      "value": "3230"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "DataCite Repository",
+      "value": "ARDCX.QUT1"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "DataCite RAiD Registry",
+      "value": "UUAG.IXKMSM"
+    }
+  ],
   "sameAs": [
+    "https://ror.org/03pnv4752",
     "https://github.com/eresearchqut",
+    "https://github.com/qcr",
+    "https://github.com/qutas",
+    "https://github.com/QUTlib",
+    "https://github.com/QUT-Digital-Observatory",
     "https://au.linkedin.com/school/queensland-university-of-technology/"
   ],
-  "department": {
-    "@type": "Repository",
-    "name": "QUT ePrints",
-    "url": "https://eprints.qut.edu.au/",
-    "description": "Open institutional repository of QUT research outputs, harvestable via OAI-PMH 2.0.",
-    "oaiBaseURL": "https://eprints.qut.edu.au/cgi/oai2",
-    "protocolVersion": "2.0",
-    "metadataFormat": [
-      "oai_dc",
-      "oai_bibl",
-      "oai_openaire",
-      "uketd_dc"
-    ]
-  }
+  "memberOf": {
+    "@type": "Organization",
+    "name": "Australian Access Federation",
+    "url": "https://aaf.edu.au/"
+  },
+  "department": [
+    {
+      "@type": "Repository",
+      "name": "QUT ePrints",
+      "url": "https://eprints.qut.edu.au/",
+      "description": "Open institutional repository of QUT research outputs, self-hosted on GNU EPrints and harvestable via OAI-PMH 2.0 without authentication.",
+      "oaiBaseURL": "https://eprints.qut.edu.au/cgi/oai2",
+      "protocolVersion": "2.0",
+      "metadataFormat": [
+        "oai_dc",
+        "oai_bibl",
+        "oai_openaire",
+        "uketd_dc"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "name": "QUT Identity Provider",
+      "url": "https://idp.qut.edu.au/idp/shibboleth",
+      "description": "QUT's self-hosted Shibboleth SAML 2.0 identity provider, registered in the Australian Access Federation and interfederated through eduGAIN.",
+      "samlEntityID": "https://idp.qut.edu.au/idp/shibboleth",
+      "federationScope": "qut.edu.au"
+    },
+    {
+      "@type": "Organization",
+      "name": "QUT ESOE",
+      "url": "https://esoe.qut.edu.au/auth/realms/qut",
+      "description": "QUT's enterprise single sign-on service, a Keycloak deployment acting as both an OpenID Connect provider and a SAML 2.0 identity provider, brokering interactive login to Microsoft Entra ID.",
+      "oidcIssuer": "https://esoe.qut.edu.au/auth/realms/qut",
+      "samlEntityID": "https://esoe.qut.edu.au/auth/realms/qut"
+    }
+  ]
 }

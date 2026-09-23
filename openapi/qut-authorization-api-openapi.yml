@@ -1,0 +1,195 @@
+openapi: 3.2.0
+info:
+  title: QUT ESOE OpenID Connect Provider Authorization API
+  version: 1.0.0
+  summary: Queensland University of Technology's institution-operated OpenID Connect / OAuth 2.0 authorization server.
+  description: Machine-readable contract for the OAuth 2.0 / OpenID Connect authorization server that Queensland University of Technology operates at esoe.qut.edu.au.
+  contact:
+    name: Queensland University of Technology
+    url: https://www.qut.edu.au/
+  license:
+    name: Not stated
+    identifier: NOASSERTION
+  x-operator: institution
+  x-operator-basis: DNS + APNIC whois + TLS subject. esoe.qut.edu.au -> 131.181.118.129 (no CNAME); netname QUT-AU, org ORG-QUOT1-AP "Queensland University of Technology", origin AS7575; certificate subject O=QUEENSLAND UNIVERSITY OF TECHNOLOGY, CN=esoe.qut.edu.au, issuer DigiCert Global G2 TLS RSA SHA256 2020 CA1.
+  x-generated: '2026-09-01'
+  x-method: derived
+  x-source: https://esoe.qut.edu.au/auth/realms/qut/.well-known/openid-configuration
+servers:
+- url: https://esoe.qut.edu.au/auth/realms/qut
+  description: QUT ESOE Keycloak realm `qut` (production, live 2026-09-01)
+security:
+- oauth2: []
+tags:
+- name: Authorization
+  description: OAuth 2.0 authorization and device / CIBA initiation.
+paths:
+  /protocol/openid-connect/auth:
+    get:
+      tags:
+      - Authorization
+      operationId: authorize
+      summary: OAuth 2.0 authorization endpoint
+      description: Browser-facing authorization endpoint. QUT brokers the interactive step to Microsoft Entra ID (observed redirect target /broker/entra/login). PKCE is supported with S256 and plain.
+      security: []
+      parameters:
+      - name: response_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - code
+          - none
+          - id_token
+          - token
+          - id_token token
+          - code id_token
+          - code token
+          - code id_token token
+      - name: client_id
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: redirect_uri
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uri
+      - name: scope
+        in: query
+        required: false
+        schema:
+          type: string
+        example: openid profile email
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: code_challenge
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: code_challenge_method
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - S256
+          - plain
+      responses:
+        '302':
+          description: Redirect to the identity broker, or back to redirect_uri with a code or an error.
+        '400':
+          description: Invalid authorization request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+  /protocol/openid-connect/auth/device:
+    post:
+      tags:
+      - Authorization
+      operationId: deviceAuthorization
+      summary: OAuth 2.0 Device Authorization (RFC 8628)
+      responses:
+        '200':
+          description: Device and user codes issued.
+        '401':
+          description: Client authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+  /protocol/openid-connect/ext/par/request:
+    post:
+      tags:
+      - Authorization
+      operationId: pushedAuthorizationRequest
+      summary: Pushed Authorization Request (RFC 9126)
+      responses:
+        '201':
+          description: request_uri issued.
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+  /protocol/openid-connect/ext/ciba/auth:
+    post:
+      tags:
+      - Authorization
+      operationId: backchannelAuthentication
+      summary: Client Initiated Backchannel Authentication (CIBA)
+      responses:
+        '200':
+          description: auth_req_id issued.
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+components:
+  schemas:
+    OAuthError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          examples:
+          - invalid_request
+          - invalid_client
+          - invalid_grant
+          - unauthorized_client
+          - unsupported_grant_type
+          - invalid_scope
+          - access_denied
+          - server_error
+        error_description:
+          type: string
+        error_uri:
+          type: string
+          format: uri
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access token issued by this realm.
+    oauth2:
+      type: oauth2
+      description: Scopes below are exactly the `scopes_supported` array of the live discovery document. `Service_Account`, `service_account` and `Integsvc_test_client` are QUT-specific client scopes, not standard OpenID Connect scopes.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/auth
+          tokenUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          refreshUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          scopes:
+            openid: Authenticate the end user and issue an ID token.
+            profile: Basic profile claims.
+            email: Email address claim.
+            phone: Phone number claim.
+            address: Address claim.
+            offline_access: Issue a refresh token usable while the user is offline.
+            roles: Realm and client role claims.
+            basic: Baseline claim set.
+            acr: Authentication context class reference claim.
+            web-origins: Allowed web origins for CORS.
+            microprofile-jwt: MicroProfile JWT claim mapping.
+            Service_Account: QUT-specific service account scope.
+            service_account: QUT-specific service account scope.
+            Integsvc_test_client: QUT-specific integration service test client scope.
+        clientCredentials:
+          tokenUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          scopes:
+            Service_Account: QUT-specific service account scope.
+            service_account: QUT-specific service account scope.

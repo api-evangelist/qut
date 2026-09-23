@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type='text/xsl' href='/secure/oai2.xsl' ?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2026-09-01T20:05:20Z</responseDate>
+  <request verb="ListMetadataFormats">https://eprints.qut.edu.au/secure/cgi/oai2</request>
+  <ListMetadataFormats>
+    <metadataFormat>
+      <metadataPrefix>oai_bibl</metadataPrefix>
+      <schema>http://www.openarchives.org/OAI/2.0/oai_dc.xsd</schema>
+      <metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dc/</metadataNamespace>
+    </metadataFormat>
+    <metadataFormat>
+      <metadataPrefix>oai_dc</metadataPrefix>
+      <schema>http://www.openarchives.org/OAI/2.0/oai_dc.xsd</schema>
+      <metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dc/</metadataNamespace>
+    </metadataFormat>
+    <metadataFormat>
+      <metadataPrefix>oai_openaire</metadataPrefix>
+      <schema>https://www.openaire.eu/schema/repo-lit/4.0/openaire.xsd</schema>
+      <metadataNamespace>http://namespace.openaire.eu/schema/oaire/</metadataNamespace>
+    </metadataFormat>
+    <metadataFormat>
+      <metadataPrefix>uketd_dc</metadataPrefix>
+      <schema>http://naca.central.cranfield.ac.uk/ethos-oai/2.0/uketd_dc.xsd</schema>
+      <metadataNamespace>http://naca.central.cranfield.ac.uk/ethos-oai/2.0/</metadataNamespace>
+    </metadataFormat>
+  </ListMetadataFormats>
+</OAI-PMH>

@@ -1,0 +1,458 @@
+# x-archived-from: qut-esoe-openid-connect-openapi.yml
+# x-archived-on: 2026-09-16
+openapi: 3.1.0
+info:
+  title: QUT ESOE OpenID Connect Provider
+  version: '1.0.0'
+  summary: Queensland University of Technology's institution-operated OpenID Connect / OAuth 2.0 authorization server.
+  description: >-
+    Machine-readable contract for the OAuth 2.0 / OpenID Connect authorization server that
+    Queensland University of Technology operates at esoe.qut.edu.au. The realm `qut` publishes a
+    live OpenID Provider Metadata document (OpenID Connect Discovery 1.0) and an RFC 8414 OAuth 2.0
+    Authorization Server Metadata document, and it brokers to Microsoft Entra ID for the
+    interactive login step.
+
+    OPERATOR: institution. esoe.qut.edu.au resolves to 131.181.118.129, inside the APNIC allocation
+    QUT-AU / ORG-QUOT1-AP, origin AS7575 "Queensland University of Technology", with no CNAME, and
+    presents a DigiCert OV certificate issued to O=QUEENSLAND UNIVERSITY OF TECHNOLOGY,
+    CN=esoe.qut.edu.au. QUT runs this on its own address space; the software is Keycloak, the
+    deployment and the identity data are QUT's.
+
+    THIS DOCUMENT WAS DERIVED, NOT PUBLISHED BY QUT. QUT publishes the discovery document; it does
+    not publish an OpenAPI. Every path, parameter and response below is transcribed from the live
+    discovery document archived at examples/qut-esoe-openid-configuration.json, fetched
+    2026-09-01 with HTTP 200. No endpoint here is invented.
+
+    ACCESS: the token, userinfo, introspection, revocation and dynamic-registration endpoints all
+    require a registered client. Client registration at QUT is an internal process; there is no
+    public self-service developer portal, so this contract describes a real, live, standards-based
+    surface that a member of the public can discover but not obtain credentials for.
+  contact:
+    name: Queensland University of Technology
+    url: https://www.qut.edu.au/
+  license:
+    name: Not stated
+    identifier: NOASSERTION
+  x-operator: institution
+  x-operator-basis: >-
+    DNS + APNIC whois + TLS subject. esoe.qut.edu.au -> 131.181.118.129 (no CNAME); netname QUT-AU,
+    org ORG-QUOT1-AP "Queensland University of Technology", origin AS7575; certificate subject
+    O=QUEENSLAND UNIVERSITY OF TECHNOLOGY, CN=esoe.qut.edu.au, issuer DigiCert Global G2 TLS RSA
+    SHA256 2020 CA1.
+  x-generated: '2026-09-01'
+  x-method: derived
+  x-source: https://esoe.qut.edu.au/auth/realms/qut/.well-known/openid-configuration
+servers:
+  - url: https://esoe.qut.edu.au/auth/realms/qut
+    description: QUT ESOE Keycloak realm `qut` (production, live 2026-09-01)
+tags:
+  - name: Discovery
+    description: Provider metadata documents.
+  - name: Authorization
+    description: OAuth 2.0 authorization and device / CIBA initiation.
+  - name: Token
+    description: Token issuance, inspection and revocation.
+  - name: Identity
+    description: End-user claims and session termination.
+  - name: Client Registration
+    description: OpenID Connect Dynamic Client Registration.
+paths:
+  /.well-known/openid-configuration:
+    get:
+      tags: [Discovery]
+      operationId: getOpenIdConfiguration
+      summary: OpenID Provider Metadata
+      description: OpenID Connect Discovery 1.0 provider metadata for the `qut` realm. Public, no authentication.
+      security: []
+      responses:
+        '200':
+          description: Provider metadata document.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenIdProviderMetadata'
+              examples:
+                live:
+                  summary: Live response captured 2026-09-01
+                  externalValue: examples/qut-esoe-openid-configuration.json
+  /.well-known/oauth-authorization-server:
+    get:
+      tags: [Discovery]
+      operationId: getAuthorizationServerMetadata
+      summary: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+      security: []
+      responses:
+        '200':
+          description: Authorization server metadata document.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenIdProviderMetadata'
+  /protocol/openid-connect/certs:
+    get:
+      tags: [Discovery]
+      operationId: getJwks
+      summary: JSON Web Key Set
+      description: Public signing and encryption keys used to verify tokens issued by this realm. Public, no authentication.
+      security: []
+      responses:
+        '200':
+          description: JWKS document.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jwks'
+  /protocol/saml/descriptor:
+    get:
+      tags: [Discovery]
+      operationId: getSamlDescriptor
+      summary: SAML 2.0 IdP metadata for the realm
+      description: >-
+        The same realm also acts as a SAML 2.0 Identity Provider and publishes an EntityDescriptor
+        with entityID https://esoe.qut.edu.au/auth/realms/qut. Public, no authentication.
+      security: []
+      responses:
+        '200':
+          description: SAML 2.0 EntityDescriptor.
+          content:
+            application/xml:
+              schema:
+                type: string
+                contentMediaType: application/xml
+  /protocol/openid-connect/auth:
+    get:
+      tags: [Authorization]
+      operationId: authorize
+      summary: OAuth 2.0 authorization endpoint
+      description: >-
+        Browser-facing authorization endpoint. QUT brokers the interactive step to Microsoft Entra
+        ID (observed redirect target /broker/entra/login). PKCE is supported with S256 and plain.
+      security: []
+      parameters:
+        - name: response_type
+          in: query
+          required: true
+          schema: { type: string, enum: [code, none, id_token, token, 'id_token token', 'code id_token', 'code token', 'code id_token token'] }
+        - name: client_id
+          in: query
+          required: true
+          schema: { type: string }
+        - name: redirect_uri
+          in: query
+          required: false
+          schema: { type: string, format: uri }
+        - name: scope
+          in: query
+          required: false
+          schema: { type: string }
+          example: openid profile email
+        - name: state
+          in: query
+          required: false
+          schema: { type: string }
+        - name: code_challenge
+          in: query
+          required: false
+          schema: { type: string }
+        - name: code_challenge_method
+          in: query
+          required: false
+          schema: { type: string, enum: [S256, plain] }
+      responses:
+        '302':
+          description: Redirect to the identity broker, or back to redirect_uri with a code or an error.
+        '400':
+          description: Invalid authorization request.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OAuthError' }
+  /protocol/openid-connect/auth/device:
+    post:
+      tags: [Authorization]
+      operationId: deviceAuthorization
+      summary: OAuth 2.0 Device Authorization (RFC 8628)
+      responses:
+        '200':
+          description: Device and user codes issued.
+        '401':
+          description: Client authentication failed.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OAuthError' }
+  /protocol/openid-connect/ext/par/request:
+    post:
+      tags: [Authorization]
+      operationId: pushedAuthorizationRequest
+      summary: Pushed Authorization Request (RFC 9126)
+      responses:
+        '201':
+          description: request_uri issued.
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OAuthError' }
+  /protocol/openid-connect/ext/ciba/auth:
+    post:
+      tags: [Authorization]
+      operationId: backchannelAuthentication
+      summary: Client Initiated Backchannel Authentication (CIBA)
+      responses:
+        '200':
+          description: auth_req_id issued.
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OAuthError' }
+  /protocol/openid-connect/token:
+    post:
+      tags: [Token]
+      operationId: getToken
+      summary: OAuth 2.0 token endpoint
+      description: >-
+        Issues access, refresh and ID tokens. Supported grants are authorization_code,
+        client_credentials, implicit, password, refresh_token, device_code, token-exchange,
+        uma-ticket and CIBA. Client authentication methods are private_key_jwt,
+        client_secret_basic, client_secret_post, tls_client_auth and client_secret_jwt.
+        Certificate-bound access tokens (RFC 8705) are supported.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema: { $ref: '#/components/schemas/TokenRequest' }
+      responses:
+        '200':
+          description: Token response.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TokenResponse' }
+        '400':
+          description: invalid_request / invalid_grant / unsupported_grant_type.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OAuthError' }
+        '401':
+          description: invalid_client.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OAuthError' }
+  /protocol/openid-connect/token/introspect:
+    post:
+      tags: [Token]
+      operationId: introspectToken
+      summary: Token introspection (RFC 7662)
+      responses:
+        '200':
+          description: Introspection response, `active` true or false.
+        '401':
+          description: invalid_client.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OAuthError' }
+  /protocol/openid-connect/revoke:
+    post:
+      tags: [Token]
+      operationId: revokeToken
+      summary: Token revocation (RFC 7009)
+      description: Revocation is idempotent — revoking an already-revoked or unknown token returns 200.
+      responses:
+        '200':
+          description: Token revoked, or was already invalid.
+        '401':
+          description: invalid_client.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OAuthError' }
+  /protocol/openid-connect/userinfo:
+    get:
+      tags: [Identity]
+      operationId: getUserInfo
+      summary: OpenID Connect UserInfo
+      description: >-
+        Returns claims about the authenticated end user. Claims advertised by this realm are aud,
+        sub, iss, auth_time, name, given_name, family_name, preferred_username, email and acr.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Claims for the subject of the presented access token.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UserInfo' }
+        '401':
+          description: Missing, expired or insufficiently scoped access token.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OAuthError' }
+  /protocol/openid-connect/logout:
+    get:
+      tags: [Identity]
+      operationId: endSession
+      summary: RP-initiated logout
+      security: []
+      responses:
+        '302':
+          description: Session terminated and the user agent redirected.
+  /clients-registrations/openid-connect:
+    post:
+      tags: [Client Registration]
+      operationId: registerClient
+      summary: OpenID Connect Dynamic Client Registration (RFC 7591)
+      description: >-
+        The realm advertises a registration endpoint. Whether anonymous registration is permitted
+        was NOT probed — sending a registration request is a write against a production identity
+        service and is out of scope for a public, read-only profile.
+      responses:
+        '201':
+          description: Client registered.
+        '401':
+          description: Initial access token required.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OAuthError' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access token issued by this realm.
+    oauth2:
+      type: oauth2
+      description: >-
+        Scopes below are exactly the `scopes_supported` array of the live discovery document.
+        `Service_Account`, `service_account` and `Integsvc_test_client` are QUT-specific client
+        scopes, not standard OpenID Connect scopes.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/auth
+          tokenUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          refreshUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          scopes:
+            openid: Authenticate the end user and issue an ID token.
+            profile: Basic profile claims.
+            email: Email address claim.
+            phone: Phone number claim.
+            address: Address claim.
+            offline_access: Issue a refresh token usable while the user is offline.
+            roles: Realm and client role claims.
+            basic: Baseline claim set.
+            acr: Authentication context class reference claim.
+            web-origins: Allowed web origins for CORS.
+            microprofile-jwt: MicroProfile JWT claim mapping.
+            Service_Account: QUT-specific service account scope.
+            service_account: QUT-specific service account scope.
+            Integsvc_test_client: QUT-specific integration service test client scope.
+        clientCredentials:
+          tokenUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          scopes:
+            Service_Account: QUT-specific service account scope.
+            service_account: QUT-specific service account scope.
+  schemas:
+    OpenIdProviderMetadata:
+      type: object
+      description: OpenID Provider / Authorization Server metadata document.
+      required: [issuer, authorization_endpoint, token_endpoint, jwks_uri, response_types_supported]
+      properties:
+        issuer: { type: string, format: uri, const: 'https://esoe.qut.edu.au/auth/realms/qut' }
+        authorization_endpoint: { type: string, format: uri }
+        token_endpoint: { type: string, format: uri }
+        userinfo_endpoint: { type: string, format: uri }
+        jwks_uri: { type: string, format: uri }
+        registration_endpoint: { type: string, format: uri }
+        introspection_endpoint: { type: string, format: uri }
+        revocation_endpoint: { type: string, format: uri }
+        end_session_endpoint: { type: string, format: uri }
+        device_authorization_endpoint: { type: string, format: uri }
+        pushed_authorization_request_endpoint: { type: string, format: uri }
+        backchannel_authentication_endpoint: { type: string, format: uri }
+        scopes_supported: { type: array, items: { type: string } }
+        grant_types_supported: { type: array, items: { type: string } }
+        response_types_supported: { type: array, items: { type: string } }
+        token_endpoint_auth_methods_supported: { type: array, items: { type: string } }
+        id_token_signing_alg_values_supported: { type: array, items: { type: string } }
+        code_challenge_methods_supported: { type: array, items: { type: string } }
+        claims_supported: { type: array, items: { type: string } }
+        subject_types_supported: { type: array, items: { type: string } }
+        tls_client_certificate_bound_access_tokens: { type: boolean }
+        require_pushed_authorization_requests: { type: boolean }
+    Jwks:
+      type: object
+      required: [keys]
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            required: [kty]
+            properties:
+              kid: { type: string }
+              kty: { type: string }
+              alg: { type: string }
+              use: { type: string, enum: [sig, enc] }
+              n: { type: string }
+              e: { type: string }
+              x5c: { type: array, items: { type: string } }
+    TokenRequest:
+      type: object
+      required: [grant_type]
+      properties:
+        grant_type:
+          type: string
+          enum:
+            - authorization_code
+            - client_credentials
+            - implicit
+            - password
+            - refresh_token
+            - 'urn:ietf:params:oauth:grant-type:device_code'
+            - 'urn:ietf:params:oauth:grant-type:token-exchange'
+            - 'urn:ietf:params:oauth:grant-type:uma-ticket'
+            - 'urn:openid:params:grant-type:ciba'
+        code: { type: string }
+        redirect_uri: { type: string, format: uri }
+        client_id: { type: string }
+        client_secret: { type: string }
+        client_assertion: { type: string }
+        client_assertion_type: { type: string }
+        code_verifier: { type: string }
+        refresh_token: { type: string }
+        scope: { type: string }
+    TokenResponse:
+      type: object
+      required: [access_token, token_type]
+      properties:
+        access_token: { type: string }
+        token_type: { type: string, examples: [Bearer] }
+        expires_in: { type: integer }
+        refresh_token: { type: string }
+        refresh_expires_in: { type: integer }
+        id_token: { type: string }
+        scope: { type: string }
+        session_state: { type: string }
+    UserInfo:
+      type: object
+      required: [sub]
+      properties:
+        sub: { type: string }
+        iss: { type: string, format: uri }
+        aud: { type: string }
+        auth_time: { type: integer }
+        name: { type: string }
+        given_name: { type: string }
+        family_name: { type: string }
+        preferred_username: { type: string }
+        email: { type: string, format: email }
+        acr: { type: string }
+    OAuthError:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+          examples: [invalid_request, invalid_client, invalid_grant, unauthorized_client, unsupported_grant_type, invalid_scope, access_denied, server_error]
+        error_description: { type: string }
+        error_uri: { type: string, format: uri }
+security:
+  - oauth2: []

@@ -1,0 +1,134 @@
+# x-archived-from: qut-eprints-rest-openapi.yml
+# x-archived-on: 2026-09-16
+openapi: 3.1.0
+info:
+  title: QUT ePrints REST Interface
+  version: '1.0.0'
+  summary: The EPrints REST dataset interface exposed by QUT's institutional repository.
+  description: >-
+    QUT ePrints exposes the GNU EPrints REST interface at https://eprints.qut.edu.au/rest/. The
+    dataset index and the subject dataset are publicly readable; individual eprint records are NOT.
+
+    WHAT WAS ACTUALLY PROBED, 2026-09-01, and this contract records the failures as faithfully as
+    the successes:
+      GET /rest/                     -> 200, lists datasets Eprints, Users, Subjects
+      GET /rest/eprint/              -> 200, lists per-record resources (N/ and N.xml)
+      GET /rest/subject/             -> 200
+      GET /rest/eprint/4.xml         -> 401
+      GET /rest/eprint/249243/       -> 401
+      GET /id/eprint/249243.json     -> 401
+    So the index is open and the payload is closed. An agent can discover the shape of this
+    repository through REST but cannot read a record through it; the open route to QUT ePrints
+    metadata is the OAI-PMH interface, documented separately in
+    openapi/qut-eprints-oai-pmh-openapi.yml.
+
+    OPERATOR: institution. Same host, same evidence as the OAI-PMH contract — 131.181.196.14,
+    APNIC QUT-AU / ORG-QUOT1-AP, AS7575, DigiCert OV certificate to QUEENSLAND UNIVERSITY OF
+    TECHNOLOGY.
+
+    THIS DOCUMENT WAS DERIVED, NOT PUBLISHED BY QUT.
+  contact:
+    name: QUT ePrints
+    email: eprints@qut.edu.au
+    url: https://www.library.qut.edu.au/about/collections/qut-eprints/
+  x-operator: institution
+  x-operator-basis: >-
+    eprints.qut.edu.au -> 131.181.196.14 (no CNAME); APNIC netname QUT-AU, org ORG-QUOT1-AP,
+    origin AS7575; TLS subject O=QUEENSLAND UNIVERSITY OF TECHNOLOGY, CN=eprints.qut.edu.au.
+  x-generated: '2026-09-01'
+  x-method: probed
+  x-source: https://eprints.qut.edu.au/rest/
+servers:
+  - url: https://eprints.qut.edu.au/rest
+    description: QUT ePrints REST base (production, live 2026-09-01)
+tags:
+  - name: Datasets
+    description: EPrints REST dataset navigation.
+paths:
+  /:
+    get:
+      tags: [Datasets]
+      operationId: listDatasets
+      summary: List the repository's REST datasets
+      description: >-
+        Returns an XHTML index of the datasets this repository exposes over REST. Live response on
+        2026-09-01 listed Eprints, Users and Subjects. Public, no authentication.
+      security: []
+      responses:
+        '200':
+          description: XHTML index titled `EPrints REST - Datasets`.
+          content:
+            application/xhtml+xml:
+              schema: { type: string, contentMediaType: application/xhtml+xml }
+              examples:
+                live:
+                  summary: Live response captured 2026-09-01
+                  externalValue: examples/qut-eprints-rest-datasets.html
+  /eprint/:
+    get:
+      tags: [Datasets]
+      operationId: listEprintResources
+      summary: List eprint resources
+      description: >-
+        Returns an XHTML index of per-record resources in the eprint dataset, as sibling `N/` and
+        `N.xml` entries. Public and 200 — but dereferencing any of the listed entries returns 401.
+      security: []
+      responses:
+        '200':
+          description: XHTML index titled `EPrints REST - Eprints DataSet`.
+          content:
+            application/xhtml+xml:
+              schema: { type: string, contentMediaType: application/xhtml+xml }
+  /subject/:
+    get:
+      tags: [Datasets]
+      operationId: listSubjectResources
+      summary: List subject resources
+      description: Returns an XHTML index of the subject dataset. Public, no authentication, verified 200.
+      security: []
+      responses:
+        '200':
+          description: XHTML index.
+          content:
+            application/xhtml+xml:
+              schema: { type: string, contentMediaType: application/xhtml+xml }
+  /eprint/{eprintId}.xml:
+    get:
+      tags: [Datasets]
+      operationId: getEprintRecord
+      summary: Retrieve one eprint record as EPrints XML
+      description: >-
+        Documented because the index advertises it, and recorded as closed because it is. Probed
+        2026-09-01 and returned HTTP 401 for both a listed id (4) and the repository's own sample
+        identifier (249243). No credential is obtainable through any public QUT route, so this
+        operation is unusable by the public.
+      parameters:
+        - name: eprintId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 249243
+      responses:
+        '200':
+          description: EPrints XML record. Not observed — the endpoint returned 401 on every probe.
+          content:
+            application/xml:
+              schema: { type: string, contentMediaType: application/xml }
+        '401':
+          description: >-
+            Unauthorized. This is the observed response, twice, on 2026-09-01. The body is an
+            Apache HTML 401 page, not a structured error document.
+          content:
+            text/html:
+              schema: { type: string, contentMediaType: text/html }
+      security:
+        - basicAuth: []
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: >-
+        EPrints REST record access is credentialed. QUT publishes no public route to obtain a
+        credential for this repository — no developer portal, no self-service registration.
+security: []

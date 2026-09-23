@@ -1,0 +1,206 @@
+openapi: 3.2.0
+info:
+  title: QUT ESOE OpenID Connect Provider Token API
+  version: 1.0.0
+  summary: Queensland University of Technology's institution-operated OpenID Connect / OAuth 2.0 authorization server.
+  description: Machine-readable contract for the OAuth 2.0 / OpenID Connect authorization server that Queensland University of Technology operates at esoe.qut.edu.au.
+  contact:
+    name: Queensland University of Technology
+    url: https://www.qut.edu.au/
+  license:
+    name: Not stated
+    identifier: NOASSERTION
+  x-operator: institution
+  x-operator-basis: DNS + APNIC whois + TLS subject. esoe.qut.edu.au -> 131.181.118.129 (no CNAME); netname QUT-AU, org ORG-QUOT1-AP "Queensland University of Technology", origin AS7575; certificate subject O=QUEENSLAND UNIVERSITY OF TECHNOLOGY, CN=esoe.qut.edu.au, issuer DigiCert Global G2 TLS RSA SHA256 2020 CA1.
+  x-generated: '2026-09-01'
+  x-method: derived
+  x-source: https://esoe.qut.edu.au/auth/realms/qut/.well-known/openid-configuration
+servers:
+- url: https://esoe.qut.edu.au/auth/realms/qut
+  description: QUT ESOE Keycloak realm `qut` (production, live 2026-09-01)
+security:
+- oauth2: []
+tags:
+- name: Token
+  description: Token issuance, inspection and revocation.
+paths:
+  /protocol/openid-connect/token:
+    post:
+      tags:
+      - Token
+      operationId: getToken
+      summary: OAuth 2.0 token endpoint
+      description: Issues access, refresh and ID tokens. Supported grants are authorization_code, client_credentials, implicit, password, refresh_token, device_code, token-exchange, uma-ticket and CIBA. Client authentication methods are private_key_jwt, client_secret_basic, client_secret_post, tls_client_auth and client_secret_jwt. Certificate-bound access tokens (RFC 8705) are supported.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '200':
+          description: Token response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: invalid_request / invalid_grant / unsupported_grant_type.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+        '401':
+          description: invalid_client.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+  /protocol/openid-connect/token/introspect:
+    post:
+      tags:
+      - Token
+      operationId: introspectToken
+      summary: Token introspection (RFC 7662)
+      responses:
+        '200':
+          description: Introspection response, `active` true or false.
+        '401':
+          description: invalid_client.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+  /protocol/openid-connect/revoke:
+    post:
+      tags:
+      - Token
+      operationId: revokeToken
+      summary: Token revocation (RFC 7009)
+      description: Revocation is idempotent — revoking an already-revoked or unknown token returns 200.
+      responses:
+        '200':
+          description: Token revoked, or was already invalid.
+        '401':
+          description: invalid_client.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+components:
+  schemas:
+    TokenRequest:
+      type: object
+      required:
+      - grant_type
+      properties:
+        grant_type:
+          type: string
+          enum:
+          - authorization_code
+          - client_credentials
+          - implicit
+          - password
+          - refresh_token
+          - urn:ietf:params:oauth:grant-type:device_code
+          - urn:ietf:params:oauth:grant-type:token-exchange
+          - urn:ietf:params:oauth:grant-type:uma-ticket
+          - urn:openid:params:grant-type:ciba
+        code:
+          type: string
+        redirect_uri:
+          type: string
+          format: uri
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        client_assertion:
+          type: string
+        client_assertion_type:
+          type: string
+        code_verifier:
+          type: string
+        refresh_token:
+          type: string
+        scope:
+          type: string
+    OAuthError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          examples:
+          - invalid_request
+          - invalid_client
+          - invalid_grant
+          - unauthorized_client
+          - unsupported_grant_type
+          - invalid_scope
+          - access_denied
+          - server_error
+        error_description:
+          type: string
+        error_uri:
+          type: string
+          format: uri
+    TokenResponse:
+      type: object
+      required:
+      - access_token
+      - token_type
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          examples:
+          - Bearer
+        expires_in:
+          type: integer
+        refresh_token:
+          type: string
+        refresh_expires_in:
+          type: integer
+        id_token:
+          type: string
+        scope:
+          type: string
+        session_state:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access token issued by this realm.
+    oauth2:
+      type: oauth2
+      description: Scopes below are exactly the `scopes_supported` array of the live discovery document. `Service_Account`, `service_account` and `Integsvc_test_client` are QUT-specific client scopes, not standard OpenID Connect scopes.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/auth
+          tokenUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          refreshUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          scopes:
+            openid: Authenticate the end user and issue an ID token.
+            profile: Basic profile claims.
+            email: Email address claim.
+            phone: Phone number claim.
+            address: Address claim.
+            offline_access: Issue a refresh token usable while the user is offline.
+            roles: Realm and client role claims.
+            basic: Baseline claim set.
+            acr: Authentication context class reference claim.
+            web-origins: Allowed web origins for CORS.
+            microprofile-jwt: MicroProfile JWT claim mapping.
+            Service_Account: QUT-specific service account scope.
+            service_account: QUT-specific service account scope.
+            Integsvc_test_client: QUT-specific integration service test client scope.
+        clientCredentials:
+          tokenUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          scopes:
+            Service_Account: QUT-specific service account scope.
+            service_account: QUT-specific service account scope.

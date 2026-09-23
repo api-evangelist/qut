@@ -1,0 +1,99 @@
+openapi: 3.2.0
+info:
+  title: QUT ESOE OpenID Connect Provider Client Registration API
+  version: 1.0.0
+  summary: Queensland University of Technology's institution-operated OpenID Connect / OAuth 2.0 authorization server.
+  description: Machine-readable contract for the OAuth 2.0 / OpenID Connect authorization server that Queensland University of Technology operates at esoe.qut.edu.au.
+  contact:
+    name: Queensland University of Technology
+    url: https://www.qut.edu.au/
+  license:
+    name: Not stated
+    identifier: NOASSERTION
+  x-operator: institution
+  x-operator-basis: DNS + APNIC whois + TLS subject. esoe.qut.edu.au -> 131.181.118.129 (no CNAME); netname QUT-AU, org ORG-QUOT1-AP "Queensland University of Technology", origin AS7575; certificate subject O=QUEENSLAND UNIVERSITY OF TECHNOLOGY, CN=esoe.qut.edu.au, issuer DigiCert Global G2 TLS RSA SHA256 2020 CA1.
+  x-generated: '2026-09-01'
+  x-method: derived
+  x-source: https://esoe.qut.edu.au/auth/realms/qut/.well-known/openid-configuration
+servers:
+- url: https://esoe.qut.edu.au/auth/realms/qut
+  description: QUT ESOE Keycloak realm `qut` (production, live 2026-09-01)
+security:
+- oauth2: []
+tags:
+- name: Client Registration
+  description: OpenID Connect Dynamic Client Registration.
+paths:
+  /clients-registrations/openid-connect:
+    post:
+      tags:
+      - Client Registration
+      operationId: registerClient
+      summary: OpenID Connect Dynamic Client Registration (RFC 7591)
+      description: The realm advertises a registration endpoint. Whether anonymous registration is permitted was NOT probed — sending a registration request is a write against a production identity service and is out of scope for a public, read-only profile.
+      responses:
+        '201':
+          description: Client registered.
+        '401':
+          description: Initial access token required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+components:
+  schemas:
+    OAuthError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          examples:
+          - invalid_request
+          - invalid_client
+          - invalid_grant
+          - unauthorized_client
+          - unsupported_grant_type
+          - invalid_scope
+          - access_denied
+          - server_error
+        error_description:
+          type: string
+        error_uri:
+          type: string
+          format: uri
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access token issued by this realm.
+    oauth2:
+      type: oauth2
+      description: Scopes below are exactly the `scopes_supported` array of the live discovery document. `Service_Account`, `service_account` and `Integsvc_test_client` are QUT-specific client scopes, not standard OpenID Connect scopes.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/auth
+          tokenUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          refreshUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          scopes:
+            openid: Authenticate the end user and issue an ID token.
+            profile: Basic profile claims.
+            email: Email address claim.
+            phone: Phone number claim.
+            address: Address claim.
+            offline_access: Issue a refresh token usable while the user is offline.
+            roles: Realm and client role claims.
+            basic: Baseline claim set.
+            acr: Authentication context class reference claim.
+            web-origins: Allowed web origins for CORS.
+            microprofile-jwt: MicroProfile JWT claim mapping.
+            Service_Account: QUT-specific service account scope.
+            service_account: QUT-specific service account scope.
+            Integsvc_test_client: QUT-specific integration service test client scope.
+        clientCredentials:
+          tokenUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          scopes:
+            Service_Account: QUT-specific service account scope.
+            service_account: QUT-specific service account scope.

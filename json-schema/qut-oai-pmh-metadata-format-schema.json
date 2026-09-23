@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/qut/refs/heads/main/json-schema/qut-oai-pmh-metadata-format-schema.json",
+  "title": "QUT ePrints OAI-PMH Metadata Format",
+  "description": "One metadataFormat entry from the QUT ePrints ListMetadataFormats response. The enum is closed to the four prefixes this repository actually advertises, read from the live response at https://eprints.qut.edu.au/cgi/oai2?verb=ListMetadataFormats (HTTP 200, 2026-09-01), archived at examples/qut-eprints-oai-listmetadataformats.xml.",
+  "x-generated": "2026-09-01",
+  "x-method": "derived",
+  "x-source": "https://eprints.qut.edu.au/cgi/oai2?verb=ListMetadataFormats",
+  "x-operator": "institution",
+  "type": "object",
+  "required": ["metadataPrefix", "schema", "metadataNamespace"],
+  "additionalProperties": false,
+  "properties": {
+    "metadataPrefix": {
+      "type": "string",
+      "enum": ["oai_dc", "oai_bibl", "oai_openaire", "uketd_dc"],
+      "description": "oai_dc is Dublin Core; oai_openaire is the OpenAIRE guidelines profile; uketd_dc is the UK Electronic Theses and Dissertations profile; oai_bibl is an EPrints bibliographic profile."
+    },
+    "schema": { "type": "string", "format": "uri" },
+    "metadataNamespace": { "type": "string", "format": "uri" }
+  }
+}

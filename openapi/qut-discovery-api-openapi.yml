@@ -1,0 +1,240 @@
+openapi: 3.2.0
+info:
+  title: QUT ESOE OpenID Connect Provider Discovery API
+  version: 1.0.0
+  summary: Queensland University of Technology's institution-operated OpenID Connect / OAuth 2.0 authorization server.
+  description: Machine-readable contract for the OAuth 2.0 / OpenID Connect authorization server that Queensland University of Technology operates at esoe.qut.edu.au.
+  contact:
+    name: Queensland University of Technology
+    url: https://www.qut.edu.au/
+  license:
+    name: Not stated
+    identifier: NOASSERTION
+  x-operator: institution
+  x-operator-basis: DNS + APNIC whois + TLS subject. esoe.qut.edu.au -> 131.181.118.129 (no CNAME); netname QUT-AU, org ORG-QUOT1-AP "Queensland University of Technology", origin AS7575; certificate subject O=QUEENSLAND UNIVERSITY OF TECHNOLOGY, CN=esoe.qut.edu.au, issuer DigiCert Global G2 TLS RSA SHA256 2020 CA1.
+  x-generated: '2026-09-01'
+  x-method: derived
+  x-source: https://esoe.qut.edu.au/auth/realms/qut/.well-known/openid-configuration
+servers:
+- url: https://esoe.qut.edu.au/auth/realms/qut
+  description: QUT ESOE Keycloak realm `qut` (production, live 2026-09-01)
+security:
+- oauth2: []
+tags:
+- name: Discovery
+  description: Provider metadata documents.
+paths:
+  /.well-known/openid-configuration:
+    get:
+      tags:
+      - Discovery
+      operationId: getOpenIdConfiguration
+      summary: OpenID Provider Metadata
+      description: OpenID Connect Discovery 1.0 provider metadata for the `qut` realm. Public, no authentication.
+      security: []
+      responses:
+        '200':
+          description: Provider metadata document.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenIdProviderMetadata'
+              examples:
+                live:
+                  summary: Live response captured 2026-09-01
+                  externalValue: examples/qut-esoe-openid-configuration.json
+  /.well-known/oauth-authorization-server:
+    get:
+      tags:
+      - Discovery
+      operationId: getAuthorizationServerMetadata
+      summary: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+      security: []
+      responses:
+        '200':
+          description: Authorization server metadata document.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenIdProviderMetadata'
+  /protocol/openid-connect/certs:
+    get:
+      tags:
+      - Discovery
+      operationId: getJwks
+      summary: JSON Web Key Set
+      description: Public signing and encryption keys used to verify tokens issued by this realm. Public, no authentication.
+      security: []
+      responses:
+        '200':
+          description: JWKS document.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jwks'
+  /protocol/saml/descriptor:
+    get:
+      tags:
+      - Discovery
+      operationId: getSamlDescriptor
+      summary: SAML 2.0 IdP metadata for the realm
+      description: The same realm also acts as a SAML 2.0 Identity Provider and publishes an EntityDescriptor with entityID https://esoe.qut.edu.au/auth/realms/qut. Public, no authentication.
+      security: []
+      responses:
+        '200':
+          description: SAML 2.0 EntityDescriptor.
+          content:
+            application/xml:
+              schema:
+                type: string
+                contentMediaType: application/xml
+components:
+  schemas:
+    Jwks:
+      type: object
+      required:
+      - keys
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            required:
+            - kty
+            properties:
+              kid:
+                type: string
+              kty:
+                type: string
+              alg:
+                type: string
+              use:
+                type: string
+                enum:
+                - sig
+                - enc
+              n:
+                type: string
+              e:
+                type: string
+              x5c:
+                type: array
+                items:
+                  type: string
+    OpenIdProviderMetadata:
+      type: object
+      description: OpenID Provider / Authorization Server metadata document.
+      required:
+      - issuer
+      - authorization_endpoint
+      - token_endpoint
+      - jwks_uri
+      - response_types_supported
+      properties:
+        issuer:
+          type: string
+          format: uri
+          const: https://esoe.qut.edu.au/auth/realms/qut
+        authorization_endpoint:
+          type: string
+          format: uri
+        token_endpoint:
+          type: string
+          format: uri
+        userinfo_endpoint:
+          type: string
+          format: uri
+        jwks_uri:
+          type: string
+          format: uri
+        registration_endpoint:
+          type: string
+          format: uri
+        introspection_endpoint:
+          type: string
+          format: uri
+        revocation_endpoint:
+          type: string
+          format: uri
+        end_session_endpoint:
+          type: string
+          format: uri
+        device_authorization_endpoint:
+          type: string
+          format: uri
+        pushed_authorization_request_endpoint:
+          type: string
+          format: uri
+        backchannel_authentication_endpoint:
+          type: string
+          format: uri
+        scopes_supported:
+          type: array
+          items:
+            type: string
+        grant_types_supported:
+          type: array
+          items:
+            type: string
+        response_types_supported:
+          type: array
+          items:
+            type: string
+        token_endpoint_auth_methods_supported:
+          type: array
+          items:
+            type: string
+        id_token_signing_alg_values_supported:
+          type: array
+          items:
+            type: string
+        code_challenge_methods_supported:
+          type: array
+          items:
+            type: string
+        claims_supported:
+          type: array
+          items:
+            type: string
+        subject_types_supported:
+          type: array
+          items:
+            type: string
+        tls_client_certificate_bound_access_tokens:
+          type: boolean
+        require_pushed_authorization_requests:
+          type: boolean
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access token issued by this realm.
+    oauth2:
+      type: oauth2
+      description: Scopes below are exactly the `scopes_supported` array of the live discovery document. `Service_Account`, `service_account` and `Integsvc_test_client` are QUT-specific client scopes, not standard OpenID Connect scopes.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/auth
+          tokenUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          refreshUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          scopes:
+            openid: Authenticate the end user and issue an ID token.
+            profile: Basic profile claims.
+            email: Email address claim.
+            phone: Phone number claim.
+            address: Address claim.
+            offline_access: Issue a refresh token usable while the user is offline.
+            roles: Realm and client role claims.
+            basic: Baseline claim set.
+            acr: Authentication context class reference claim.
+            web-origins: Allowed web origins for CORS.
+            microprofile-jwt: MicroProfile JWT claim mapping.
+            Service_Account: QUT-specific service account scope.
+            service_account: QUT-specific service account scope.
+            Integsvc_test_client: QUT-specific integration service test client scope.
+        clientCredentials:
+          tokenUrl: https://esoe.qut.edu.au/auth/realms/qut/protocol/openid-connect/token
+          scopes:
+            Service_Account: QUT-specific service account scope.
+            service_account: QUT-specific service account scope.

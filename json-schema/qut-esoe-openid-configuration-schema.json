@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/qut/refs/heads/main/json-schema/qut-esoe-openid-configuration-schema.json",
+  "title": "QUT ESOE OpenID Provider Metadata",
+  "description": "Schema for the OpenID Provider Metadata document QUT serves for the Keycloak realm `qut`. Derived from the live document at https://esoe.qut.edu.au/auth/realms/qut/.well-known/openid-configuration (HTTP 200, 6,494 bytes, 2026-09-01), archived at examples/qut-esoe-openid-configuration.json. Const and enum values below are QUT's actual advertised values, not the OpenID Connect Discovery specification's full range.",
+  "x-generated": "2026-09-01",
+  "x-method": "derived",
+  "x-source": "https://esoe.qut.edu.au/auth/realms/qut/.well-known/openid-configuration",
+  "x-operator": "institution",
+  "type": "object",
+  "required": ["issuer", "authorization_endpoint", "token_endpoint", "jwks_uri", "response_types_supported", "subject_types_supported", "id_token_signing_alg_values_supported"],
+  "properties": {
+    "issuer": { "type": "string", "format": "uri", "const": "https://esoe.qut.edu.au/auth/realms/qut" },
+    "authorization_endpoint": { "type": "string", "format": "uri" },
+    "token_endpoint": { "type": "string", "format": "uri" },
+    "userinfo_endpoint": { "type": "string", "format": "uri" },
+    "jwks_uri": { "type": "string", "format": "uri" },
+    "registration_endpoint": { "type": "string", "format": "uri" },
+    "introspection_endpoint": { "type": "string", "format": "uri" },
+    "revocation_endpoint": { "type": "string", "format": "uri" },
+    "end_session_endpoint": { "type": "string", "format": "uri" },
+    "device_authorization_endpoint": { "type": "string", "format": "uri" },
+    "pushed_authorization_request_endpoint": { "type": "string", "format": "uri" },
+    "backchannel_authentication_endpoint": { "type": "string", "format": "uri" },
+    "check_session_iframe": { "type": "string", "format": "uri" },
+    "scopes_supported": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["openid", "phone", "email", "address", "offline_access", "basic", "microprofile-jwt", "web-origins", "Service_Account", "profile", "roles", "service_account", "acr", "Integsvc_test_client"] }
+    },
+    "grant_types_supported": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["authorization_code", "client_credentials", "implicit", "password", "refresh_token", "urn:ietf:params:oauth:grant-type:device_code", "urn:ietf:params:oauth:grant-type:token-exchange", "urn:ietf:params:oauth:grant-type:uma-ticket", "urn:openid:params:grant-type:ciba"] }
+    },
+    "response_types_supported": { "type": "array", "items": { "type": "string" } },
+    "token_endpoint_auth_methods_supported": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["private_key_jwt", "client_secret_basic", "client_secret_post", "tls_client_auth", "client_secret_jwt"] }
+    },
+    "id_token_signing_alg_values_supported": { "type": "array", "items": { "type": "string" } },
+    "code_challenge_methods_supported": { "type": "array", "items": { "type": "string", "enum": ["S256", "plain"] } },
+    "claims_supported": { "type": "array", "items": { "type": "string", "enum": ["aud", "sub", "iss", "auth_time", "name", "given_name", "family_name", "preferred_username", "email", "acr"] } },
+    "subject_types_supported": { "type": "array", "items": { "type": "string", "enum": ["public", "pairwise"] } },
+    "tls_client_certificate_bound_access_tokens": { "type": "boolean" },
+    "require_pushed_authorization_requests": { "type": "boolean" },
+    "request_parameter_supported": { "type": "boolean" }
+  }
+}

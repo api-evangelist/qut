@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type='text/xsl' href='/secure/oai2.xsl' ?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2026-09-01T20:05:19Z</responseDate>
+  <request verb="Identify">https://eprints.qut.edu.au/secure/cgi/oai2</request>
+  <Identify>
+    <repositoryName>QUT ePrints</repositoryName>
+    <baseURL>https://eprints.qut.edu.au/cgi/oai2</baseURL>
+    <protocolVersion>2.0</protocolVersion>
+    <adminEmail>eprints@qut.edu.au</adminEmail>
+    <earliestDatestamp>2025-01-25T14:48:30Z</earliestDatestamp>
+    <deletedRecord>persistent</deletedRecord>
+    <granularity>YYYY-MM-DDThh:mm:ssZ</granularity>
+    <description>
+      <oai-identifier xmlns="http://www.openarchives.org/OAI/2.0/oai-identifier" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai-identifier http://www.openarchives.org/OAI/2.0/oai-identifier.xsd">
+        <scheme>oai</scheme>
+        <repositoryIdentifier>eprints.qut.edu.au</repositoryIdentifier>
+        <delimiter>:</delimiter>
+        <sampleIdentifier>oai:eprints.qut.edu.au:249243</sampleIdentifier>
+      </oai-identifier>
+    </description>
+    <description>
+      <eprints xmlns="http://www.openarchives.org/OAI/1.1/eprints" xsi:schemaLocation="http://www.openarchives.org/OAI/1.1/eprints http://www.openarchives.org/OAI/1.1/eprints.xsd">
+        <content>
+          <text>1. This is an institutional repository. 2. QUT ePrints accepts material 
+that relates to research output of Queensland University of Technology its 
+staff and graduate students, and archival material approved by the Library 
+Director. Examples of the types of material accepted for inclusion in the 
+repository journal articles, book chapters, conference papers, conference 
+posters, higher degree theses and unpublished research outputs. 3. Research 
+papers are individually tagged with their peer-review and publication status. 
+4. Principal Language: English. 
+</text>
+        </content>
+        <metadataPolicy>
+          <text>1. Anyone may access the metadata free of charge. 2. QUT ePrints metadata 
+can be harvested by third parties for purposes related to the discovery of 
+the archive's contents.  The metadata may be re-used in any medium without 
+prior permission for not-for-profit purposes. 
+</text>
+        </metadataPolicy>
+        <dataPolicy>
+          <text>1. Items are available free of charge. 2. Copies of full items generally can 
+be reproduced, displayed or performed, and given to third parties in any format 
+or medium for personal research or study, educational, or not-for-profit purposes 
+without prior permission or charge, provided: (a) the authors, title and full 
+bibliographic details are given (b) a hyperlink and/or URL are given for the 
+original metadata page (c) the content is not changed in any way. 3. Full items 
+may be harvested by robots for data mining purposes. Where full items are harvested 
+permanently for re-exposure on the Internet, permission must be sought from Queensland 
+University of Technology. 4. Users are warned that most of the materials in QUT ePrints 
+are protected by copyright and any further dealings in the material may be an infringement 
+of the rights of copyright holders.
+</text>
+        </dataPolicy>
+        <submissionPolicy>
+          <text>1. The aim of QUT ePrints is to provide a permanent record of the research 
+output of the University and to maximise the visibility, accessibility, usage 
+and impact of this research through open access. 2. Where possible, the repository 
+will include a digital copy of the research paper/work deposited by the author 
+or an authorised second party.  For journal articles, the version deposited may 
+be the published version of record (if permitted by the copyright owner), the 
+author's accepted manuscript version or the version submitted for peer review.  
+3. Deposit of full items is encouraged at the earliest possible opportunity with 
+the option of an embargo facility to delay public visibility. 4. All deposits will 
+be assessed to ensure that they are within the scope of the repository and every 
+effort will be made to validate published works although responsibility for the 
+authenticity of deposits lies with the author.  5. Where possible, the repository 
+record will include a link to the publisher's website to facilitate access to the 
+version of record and to support validation.
+</text>
+        </submissionPolicy>
+        <comment>Queensland University of Technology has a
+    commitment to retain items indefinitely in QUT ePrints. However,
+    the continuing existence of the repository cannot be guaranteed.</comment>
+        <comment>The QUT Copyright Officer will review all takedown requests. If
+    there is prima facie evidence of copyright violation then the
+    research paper/work in question will immediately be removed from
+    public view.</comment>
+      </eprints>
+    </description>
+  </Identify>
+</OAI-PMH>
