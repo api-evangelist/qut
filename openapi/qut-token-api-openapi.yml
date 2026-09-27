@@ -89,42 +89,6 @@ paths:
                 $ref: '#/components/schemas/OAuthError'
 components:
   schemas:
-    TokenRequest:
-      type: object
-      required:
-      - grant_type
-      properties:
-        grant_type:
-          type: string
-          enum:
-          - authorization_code
-          - client_credentials
-          - implicit
-          - password
-          - refresh_token
-          - urn:ietf:params:oauth:grant-type:device_code
-          - urn:ietf:params:oauth:grant-type:token-exchange
-          - urn:ietf:params:oauth:grant-type:uma-ticket
-          - urn:openid:params:grant-type:ciba
-        code:
-          type: string
-        redirect_uri:
-          type: string
-          format: uri
-        client_id:
-          type: string
-        client_secret:
-          type: string
-        client_assertion:
-          type: string
-        client_assertion_type:
-          type: string
-        code_verifier:
-          type: string
-        refresh_token:
-          type: string
-        scope:
-          type: string
     OAuthError:
       type: object
       required:
@@ -169,6 +133,42 @@ components:
         scope:
           type: string
         session_state:
+          type: string
+    TokenRequest:
+      type: object
+      required:
+      - grant_type
+      properties:
+        grant_type:
+          type: string
+          enum:
+          - authorization_code
+          - client_credentials
+          - implicit
+          - password
+          - refresh_token
+          - urn:ietf:params:oauth:grant-type:device_code
+          - urn:ietf:params:oauth:grant-type:token-exchange
+          - urn:ietf:params:oauth:grant-type:uma-ticket
+          - urn:openid:params:grant-type:ciba
+        code:
+          type: string
+        redirect_uri:
+          type: string
+          format: uri
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        client_assertion:
+          type: string
+        client_assertion_type:
+          type: string
+        code_verifier:
+          type: string
+        refresh_token:
+          type: string
+        scope:
           type: string
   securitySchemes:
     bearerAuth:

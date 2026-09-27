@@ -136,6 +136,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MetadataFormat'
+    OAIError:
+      type: object
+      required:
+      - code
+      properties:
+        code:
+          type: string
+          enum:
+          - badArgument
+          - badResumptionToken
+          - badVerb
+          - cannotDisseminateFormat
+          - idDoesNotExist
+          - noRecordsMatch
+          - noMetadataFormats
+          - noSetHierarchy
+        message:
+          type: string
     MetadataFormat:
       type: object
       required:
@@ -156,24 +174,6 @@ components:
         metadataNamespace:
           type: string
           format: uri
-    OAIError:
-      type: object
-      required:
-      - code
-      properties:
-        code:
-          type: string
-          enum:
-          - badArgument
-          - badResumptionToken
-          - badVerb
-          - cannotDisseminateFormat
-          - idDoesNotExist
-          - noRecordsMatch
-          - noMetadataFormats
-          - noSetHierarchy
-        message:
-          type: string
     Identify:
       type: object
       description: Values below are the live values returned by this repository on 2026-09-01.

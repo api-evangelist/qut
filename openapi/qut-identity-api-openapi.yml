@@ -58,6 +58,27 @@ paths:
           description: Session terminated and the user agent redirected.
 components:
   schemas:
+    OAuthError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          examples:
+          - invalid_request
+          - invalid_client
+          - invalid_grant
+          - unauthorized_client
+          - unsupported_grant_type
+          - invalid_scope
+          - access_denied
+          - server_error
+        error_description:
+          type: string
+        error_uri:
+          type: string
+          format: uri
     UserInfo:
       type: object
       required:
@@ -85,27 +106,6 @@ components:
           format: email
         acr:
           type: string
-    OAuthError:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          examples:
-          - invalid_request
-          - invalid_client
-          - invalid_grant
-          - unauthorized_client
-          - unsupported_grant_type
-          - invalid_scope
-          - access_denied
-          - server_error
-        error_description:
-          type: string
-        error_uri:
-          type: string
-          format: uri
   securitySchemes:
     bearerAuth:
       type: http

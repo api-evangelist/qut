@@ -25,16 +25,21 @@ description: >-
   timetable API, and no public route to a credential for the one authorization server QUT does run.
 type: Index
 deliveryModel:
-  model: self-hosted
-  open_source: false
-  commercial: false
+  model: saas
+  license_evidence:
+    not_product:
+    - eresearchqut/eresearch-agent-plugins
+  open_source: unknown
+  commercial: true
   callable_host: true
-  label: Institution-operated endpoints · you call QUT's own host
-  confidence: high
+  label: Hosted service · you call their endpoint
+  confidence: low
   source:
-    - probed
-  generated: '2026-09-01'
-  method: probed
+  - openapi
+  - pricing
+  - repository-not-product
+  generated: '2026-09-25'
+  method: derived
 accessModel:
   pricing: free
   onboarding: none
