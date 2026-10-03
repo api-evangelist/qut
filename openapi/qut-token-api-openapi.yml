@@ -110,30 +110,6 @@ components:
         error_uri:
           type: string
           format: uri
-    TokenResponse:
-      type: object
-      required:
-      - access_token
-      - token_type
-      properties:
-        access_token:
-          type: string
-        token_type:
-          type: string
-          examples:
-          - Bearer
-        expires_in:
-          type: integer
-        refresh_token:
-          type: string
-        refresh_expires_in:
-          type: integer
-        id_token:
-          type: string
-        scope:
-          type: string
-        session_state:
-          type: string
     TokenRequest:
       type: object
       required:
@@ -169,6 +145,30 @@ components:
         refresh_token:
           type: string
         scope:
+          type: string
+    TokenResponse:
+      type: object
+      required:
+      - access_token
+      - token_type
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          examples:
+          - Bearer
+        expires_in:
+          type: integer
+        refresh_token:
+          type: string
+        refresh_expires_in:
+          type: integer
+        id_token:
+          type: string
+        scope:
+          type: string
+        session_state:
           type: string
   securitySchemes:
     bearerAuth:
