@@ -108,6 +108,52 @@ paths:
                   externalValue: examples/qut-eprints-oai-listmetadataformats.xml
 components:
   schemas:
+    OAIError:
+      type: object
+      required:
+      - code
+      properties:
+        code:
+          type: string
+          enum:
+          - badArgument
+          - badResumptionToken
+          - badVerb
+          - cannotDisseminateFormat
+          - idDoesNotExist
+          - noRecordsMatch
+          - noMetadataFormats
+          - noSetHierarchy
+        message:
+          type: string
+    OAIPMHEnvelope:
+      type: object
+      description: The OAI-PMH 2.0 response envelope, as defined by http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd. Modelled here as an object for tooling; the wire format is XML.
+      required:
+      - responseDate
+      - request
+      properties:
+        responseDate:
+          type: string
+          format: date-time
+        request:
+          type: object
+          properties:
+            verb:
+              type: string
+            value:
+              type: string
+              format: uri
+              examples:
+              - https://eprints.qut.edu.au/cgi/oai2
+        error:
+          $ref: '#/components/schemas/OAIError'
+        Identify:
+          $ref: '#/components/schemas/Identify'
+        ListMetadataFormats:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataFormat'
     Identify:
       type: object
       description: Values below are the live values returned by this repository on 2026-09-01.
@@ -179,49 +225,3 @@ components:
         metadataNamespace:
           type: string
           format: uri
-    OAIPMHEnvelope:
-      type: object
-      description: The OAI-PMH 2.0 response envelope, as defined by http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd. Modelled here as an object for tooling; the wire format is XML.
-      required:
-      - responseDate
-      - request
-      properties:
-        responseDate:
-          type: string
-          format: date-time
-        request:
-          type: object
-          properties:
-            verb:
-              type: string
-            value:
-              type: string
-              format: uri
-              examples:
-              - https://eprints.qut.edu.au/cgi/oai2
-        error:
-          $ref: '#/components/schemas/OAIError'
-        Identify:
-          $ref: '#/components/schemas/Identify'
-        ListMetadataFormats:
-          type: array
-          items:
-            $ref: '#/components/schemas/MetadataFormat'
-    OAIError:
-      type: object
-      required:
-      - code
-      properties:
-        code:
-          type: string
-          enum:
-          - badArgument
-          - badResumptionToken
-          - badVerb
-          - cannotDisseminateFormat
-          - idDoesNotExist
-          - noRecordsMatch
-          - noMetadataFormats
-          - noSetHierarchy
-        message:
-          type: string
