@@ -144,6 +144,9 @@ apis:
   humanURL: https://canvas.qut.edu.au/
   baseURL: https://canvas.qut.edu.au/
   tags:
+  - LMS
+  - Vendor Platform
+  tags_raw:
   - Learning Management
   - Vendor Platform
 - name: QUT collection in ARDC Research Data Australia
