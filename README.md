@@ -1,4 +1,4 @@
-# Queensland University of Technology (qut)
+# Queensland University of Technology
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,51 +64,150 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Queensland University of Technology (QUT) is a public research university in Brisbane, Australia, ranked #213 in the QS World University Rankings 2025. This repository catalogs QUT's public developer and API footprint as an [APIs.json](https://apisjson.org) profile. QUT's machine-accessible footprint is modest and centered on open research infrastructure — most notably the QUT ePrints institutional repository's OAI-PMH metadata interface — alongside several active research-group GitHub organizations.
+Queensland University of Technology (QUT) is a public research university in Brisbane, Australia, serving around 50,000 students with an applied emphasis in teaching and research. It is not an API producer and it publishes no developer portal, no API keys and no OpenAPI of its own — but it is one of the few institutions in this cohort whose machine-readable surfaces are genuinely its own engineering rather than a vendor's contract running under its name. Three surfaces were verified live on QUT-owned infrastructure inside APNIC allocation QUT-AU (AS7575), with no CNAME to a managed platform: the QUT ePrints OAI-PMH 2.0 repository interface at eprints.qut.edu.au, fully public and advertising oai_dc, oai_bibl, oai_openaire and uketd_dc; a self-hosted Shibboleth SAML 2.0 identity provider at idp.qut.edu.au registered in the Australian Access Federation and asserting the qut.edu.au scope; and a Keycloak OpenID Connect authorization server at esoe.qut.edu.au publishing a complete discovery document, JWKS, RFC 8414 metadata, dynamic client registration, PAR, CIBA and certificate-bound tokens, brokering interactive login to Microsoft Entra ID. QUT eResearch additionally publishes a public agent plugin marketplace carrying an MCP server definition, which is rare for a university — though the documentation host it targets, docs.eres.qut.edu.au, resolves publicly to an RFC 1918 private address and is unreachable from outside QUT. Everything else is bought: library discovery is an Ex Libris Primo VE tenancy, the LMS is Instructure Canvas, research data is contributed to ARDC's national registry, and identity is registered in DataCite, Crossref and ROR. Those relationships are recorded here; their contracts are not, because they are not QUT's. There is no open data portal, no course or timetable API, and no public route to a credential for the one authorization server QUT does run.
 
-- APIs.json: https://raw.githubusercontent.com/api-evangelist/qut/refs/heads/main/apis.yml
-- Run with Naftiko: https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=qut-api-evangelist&utm_content=repo
+**Areas:** University · Higher Education · Education · Australia · Research · Research Repository · Identity Federation · OAI-PMH · SAML · Institutional Repository · Open Access
 
-## Type
+## Queensland University of Technology on APIs.io
 
-- Index / Consumer / 3rd-Party
+Everything profiled for Queensland University of Technology is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/qut/](https://apis.io/providers/qut/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (16)
 
-Education, Higher Education, University, Research, Open Data, Australia, OAI-PMH
+- [QUT Shibboleth Identity Provider](https://apis.io/apis/qut/qut-shibboleth-identity-provider/) — QUT's self-hosted Shibboleth SAML 2.0 identity provider. Publishes per-entity metadata that dereferences from its own entityID, asserts shibmd:Scope…
+- [QUT eResearch Agent Plugin Marketplace](https://apis.io/apis/qut/qut-eresearch-agent-plugin-marketplace/) — A public agent plugin marketplace published by QUT eResearch, carrying one MCP server definition that wraps the QUT eResearch documentation site.…
+- [QUT Library Discovery (Ex Libris Primo VE tenant)](https://apis.io/apis/qut/qut-library-discovery-ex-libris-primo-ve-tenant/) — QUT's library discovery layer runs on Ex Libris Primo VE / Alma under view id 61QUT_INST:QUT. The collection and the configuration are QUT's; the platform…
+- [QUT Canvas LMS (Instructure tenant)](https://apis.io/apis/qut/qut-canvas-lms-instructure-tenant/) — QUT's learning management system, an Instructure Canvas tenancy on a QUT hostname, front-ended by Microsoft Entra ID sign-in. Canvas is an LTI 1.3 platform…
+- [QUT collection in ARDC Research Data Australia](https://apis.io/apis/qut/qut-collection-in-ardc-research-data-australia/) — QUT contributes a named group to the Australian Research Data Commons national registry. A live query for group "Queensland University of Technology"…
+- [DataCite DOI and RAiD registration](https://apis.io/apis/qut/datacite-doi-and-raid-registration/) — QUT registers persistent identifiers with DataCite through the ARDC consortium. Two clients are evidenced: ARDCX.QUT1, a repository client registered 2020…
+- [Crossref membership](https://apis.io/apis/qut/crossref-membership/) — QUT is a Crossref member, id 3230, primary-name "Queensland University of Technology", verified live against Crossref's member API. Recorded as a…
+- [ROR registration](https://apis.io/apis/qut/ror-registration/) — QUT's Research Organization Registry identifier is https://ror.org/03pnv4752. The canonical machine-readable identifier for the institution itself, used…
+- [Australian Access Federation membership](https://apis.io/apis/qut/australian-access-federation-membership/) — QUT is a member of the Australian Access Federation, which is interfederated with eduGAIN. Five entity descriptors naming QUT appear in the production…
+- [Queensland University of Technology Authorization API](https://apis.io/apis/qut/qut-authorization-api/) — OAuth 2.0 authorization and device / CIBA initiation.
+- [Queensland University of Technology Client Registration API](https://apis.io/apis/qut/qut-client-registration-api/) — OpenID Connect Dynamic Client Registration.
+- [Queensland University of Technology Datasets API](https://apis.io/apis/qut/qut-datasets-api/) — EPrints REST dataset navigation.
+- [Queensland University of Technology Discovery API](https://apis.io/apis/qut/qut-discovery-api/) — Provider metadata documents.
+- [Queensland University of Technology Identity API](https://apis.io/apis/qut/qut-identity-api/) — End-user claims and session termination.
+- [Queensland University of Technology OAI PMH API](https://apis.io/apis/qut/qut-oai-pmh-api/) — The six OAI-PMH 2.0 verbs, all dispatched from a single /oai2 resource by the `verb` parameter.
+- [Queensland University of Technology Token API](https://apis.io/apis/qut/qut-token-api/) — Token issuance, inspection and revocation.
 
-## APIs
+### Published properties
 
-- **QUT ePrints OAI-PMH** — OAI-PMH 2.0 metadata harvesting for the QUT ePrints institutional research repository (oai_dc, oai_bibl, oai_openaire, uketd_dc). Base URL: `https://eprints.qut.edu.au/cgi/oai2`. Docs: https://www.library.qut.edu.au/about/collections/qut-eprints/
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## Plans
+#### JSON Schema (3)
 
-- [plans/qut-plans-pricing.yml](plans/qut-plans-pricing.yml)
+The data models the API reads and writes.
 
-## Rate Limits
+- [QUT ESOE OpenID Provider Metadata](https://apis.io/schemas/qut/qut-esoe-openid-configuration/)
+- [QUT ePrints OAI-PMH Identify Response](https://apis.io/schemas/qut/qut-oai-pmh-identify/)
+- [QUT ePrints OAI-PMH Metadata Format](https://apis.io/schemas/qut/qut-oai-pmh-metadata-format/)
 
-- [rate-limits/qut-rate-limits.yml](rate-limits/qut-rate-limits.yml)
+#### JSON-LD (1)
 
-## FinOps
+Linked-data contexts for the provider's vocabulary.
 
-- [finops/qut-finops.yml](finops/qut-finops.yml)
+- [Qut Context](https://apis.io/jsonld/qut/qut-context/)
 
-## Timestamps
+#### Examples (1)
 
-- Created: 2026-06-03
-- Modified: 2026-06-03
+Example requests and responses.
 
-## Common Properties
+- [Qut Esoe Openid Configuration](https://apis.io/examples/qut/qut-esoe-openid-configuration/)
 
-- Website: https://www.qut.edu.au/
-- GitHub: https://github.com/eresearchqut
-- LinkedIn: https://au.linkedin.com/school/queensland-university-of-technology/
-- Review: [review.yml](review.yml)
+#### Governance rules (1)
 
-## Notes
+Spectral rulesets for the provider's contracts.
 
-All entries were verified against live public sources on 2026-06-03. The QUT ePrints OAI-PMH endpoint was confirmed live (verb=Identify and verb=ListMetadataFormats returned valid responses). QUT Library Search runs on Ex Libris Primo VE / Alma, which have vendor APIs, but QUT publishes no open developer documentation or keys for them, so they are not cataloged as public APIs. The Timetable Planner, mobile app backend, and SSO/identity layer are gated and undocumented. No public open-data portal (e.g. data.qut.edu.au) was found. No endpoints were fabricated.
+- [Queensland University of Technology — openapi rules](https://apis.io/rules/qut/qut-openapi-rules/)
 
-## Maintainers
+#### Security (2)
 
-- Kin Lane — kin@apievangelist.com
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Qut Authentication](https://apis.io/security/qut/qut-authentication/)
+- [Qut Domain Security](https://apis.io/security/qut/qut-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Qut Scopes](https://apis.io/scopes/qut/qut-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Qut Plans Pricing](https://apis.io/plans/qut/qut-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Qut Rate Limits](https://apis.io/rate-limits/qut/qut-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Qut Finops](https://apis.io/finops/qut/qut-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.qut.edu.au/)
+- [Documentation](https://www.library.qut.edu.au/about/collections/qut-eprints/)
+
+## API Evangelist rating
+
+**Kin Score 23.3** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 82.1 |
+| Contract quality | 26.1 |
+| Contract governance | 11.4 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 21.4 |
+| Access clarity | 5.3 |
+
+**Agent readiness 32.9** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | yes |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | documented (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 26.5** — Education & Research
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/qut/](https://apis.io/providers/qut/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Queensland University of Technology: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/qut/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
